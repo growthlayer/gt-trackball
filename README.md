@@ -67,21 +67,21 @@ sleeps, and a **voltage sensor** lets the Pico read the battery level.
 
 ### Electronics
 
-| # | Part | Qty | Notes |
-|---|---|---|---|
-| 1 | **3" illuminated arcade trackball, USB/PS2** (generic, e.g. AliExpress "3 inch trackball LED USB") | 1 | Ball Ø76.2, mounting holes on an 80.5 mm square. Its own interface board stays: connector **J1** = +5V, DATA, CLOCK, GND, M, R, L |
-| 2 | **Raspberry Pi Pico 2 W** (RP2350, with wireless) | 1 | Must be the **2 W**: the RP2350's 5 V-tolerant pins and Bluetooth are both needed. Headers soldered on (pins point up in the case) |
-| 3 | **Waveshare 2.13" e-Paper HAT V4** (250 × 122, Raspberry Pi format, 65 × 30.5 mm) | 1 | Wired with its 8-pin JST lead — it does not plug onto the Pico |
-| 4 | **Charger + boost board**, "TP4056 type", 1 A charge, adjustable 4.2–28 V out, USB-C, 24 × 19 mm | 1 | Charges the LiPo and makes the 5 V rail. Set the output to **5.00 V** first |
-| 5 | **LiPo pouch cell 3.7 V**, 52 × 35 × 10 mm (≈1000–1200 mAh), with protection | 1 | Sits in a tray; never clamp a pouch cell |
-| 6 | **MOSFET trigger module** ("XY-MOS", 2 × D4184) | 1 | Switches the trackball off in sleep. A bare IRLZ44N + 220 Ω + 100 kΩ works too |
-| 7 | **0–25 V voltage sensor module** (30 k / 7.5 k divider, ÷5) | 1 | Battery level |
-| 8 | **Lit arcade buttons**, 30 mm (1-1/8"), 5 V LED, 3-wire XH harness | 3 | LEFT / MENU / RIGHT. Below-panel depth ≤ 60 mm |
-| 9 | **USB-A female/female D-type panel feedthrough** (body Ø23.7, holes 19 × 24 mm diagonal) | 1 | The one external port |
-| 10 | **Short micro-USB to USB-A cable** | 1 | Inside: Pico → feedthrough |
-| 11 | **USB-C male pigtail, 2-wire** (red / black) | 1 | Pico VBUS → charger input |
-| 12 | **USB-A to USB-A cable** (plain, no chip) | 1 | Outside: controller → computer (USB 3 port recommended for charging) |
-| 13 | Dupont jumper wires (female), hookup wire, 3-way lever connectors, heat-shrink | — | Everything plugs or clamps |
+| | # | Part | Qty | Notes |
+|---|---|---|---|---|
+| <img src="images/part_trackball.png" width="90"> | 1 | **3" illuminated arcade trackball, USB/PS2** (generic, e.g. AliExpress "3 inch trackball LED USB") | 1 | Ball Ø76.2, mounting holes on an 80.5 mm square. Its own interface board stays: connector **J1** = +5V, DATA, CLOCK, GND, M, R, L |
+| <img src="images/part_pico.png" width="90"> | 2 | **Raspberry Pi Pico 2 W** (RP2350, with wireless) | 1 | Must be the **2 W**: the RP2350's 5 V-tolerant pins and Bluetooth are both needed. Headers soldered on (pins point up in the case) |
+| <img src="images/part_epaper.png" width="90"> | 3 | **Waveshare 2.13" e-Paper HAT V4** (250 × 122, Raspberry Pi format, 65 × 30.5 mm) | 1 | Wired with its 8-pin JST lead — it does not plug onto the Pico |
+| <img src="images/part_charger.png" width="90"> | 4 | **Charger + boost board**, "TP4056 type", 1 A charge, adjustable 4.2–28 V out, USB-C, 24 × 19 mm | 1 | Charges the LiPo and makes the 5 V rail. Set the output to **5.00 V** first |
+| <img src="images/part_battery.png" width="90"> | 5 | **LiPo pouch cell 3.7 V**, 52 × 35 × 10 mm (≈1000–1200 mAh), with protection | 1 | Sits in a tray; never clamp a pouch cell |
+| <img src="images/part_mosfet.png" width="90"> | 6 | **MOSFET trigger module** ("XY-MOS", 2 × D4184) | 1 | Switches the trackball off in sleep. A bare IRLZ44N + 220 Ω + 100 kΩ works too |
+| <img src="images/part_sensor.png" width="90"> | 7 | **0–25 V voltage sensor module** (30 k / 7.5 k divider, ÷5) | 1 | Battery level |
+| <img src="images/part_buttons.png" width="90"> | 8 | **Lit arcade buttons**, 30 mm (1-1/8"), 5 V LED, 3-wire XH harness | 3 | LEFT / MENU / RIGHT. Below-panel depth ≤ 60 mm |
+| <img src="images/part_usb.png" width="90"> | 9 | **USB-A female/female D-type panel feedthrough** (body Ø23.7, holes 19 × 24 mm diagonal) | 1 | The one external port |
+| | 10 | **Short micro-USB to USB-A cable** | 1 | Inside: Pico → feedthrough |
+| | 11 | **USB-C male pigtail, 2-wire** (red / black) | 1 | Pico VBUS → charger input |
+| | 12 | **USB-A to USB-A cable** (plain, no chip) | 1 | Outside: controller → computer (USB 3 port recommended for charging) |
+| | 13 | Dupont jumper wires (female), hookup wire, 3-way lever connectors, heat-shrink | — | Everything plugs or clamps |
 
 ### Hardware
 
@@ -114,11 +114,16 @@ side cutters, a computer with Python for flashing the Pico.
 
 ## Step 1 — Print the case
 
-Open **[`print/gt-trackball-case.3mf`](print/)** in Bambu Studio — both
-plates and every setting are already in it (X1 Carbon, PLA; for an A1 just
-switch the printer). **Slice all**, print plate 1 and plate 2.
+Every print file comes with its settings built in. Pick your printer's
+folder in [`print/`](print/README.md) — **`bambu-x1c/`**, **`bambu-p1s/`**
+or **`bambu-a1/`** — and open:
 
-Other slicers: use the STLs in `print/` with the settings in
+- **`gt-trackball-all.3mf`** — everything on 2 plates (≈ 8.5 h, 446 g), or
+- `top.3mf`, `bottom.3mf`, `clips.3mf` — one part at a time.
+
+**Slice all** and print. No supports; any printer with a 256 mm bed works.
+
+Other slicers: the plain STLs are in [`print/stl/`](print/stl/), settings in
 [print/README.md](print/README.md) — 4 walls, 15 % gyroid, 5/4 top/bottom
 layers, 5 mm brim, no supports, parts as exported (top shell deck-down).
 
@@ -163,10 +168,31 @@ should light the button.
 
 ## Step 3 — Wire it up
 
-![Wiring diagram](images/wiring.png)
+Wire it in four steps — each picture shows only that step's wires.
+Everything plugs or clamps: Dupont jumpers on the Pico's pins, screw
+terminals on the modules, a lever connector for the 5 V split.
 
-([Full-size SVG](images/wiring.svg) — pin map, power section and a wire
-list for every part.)
+**3.1 Power and charging**
+
+![Step 3.1 - power](images/wiring_1_power.png)
+
+**3.2 Trackball**
+
+![Step 3.2 - trackball](images/wiring_2_trackball.png)
+
+**3.3 Buttons**
+
+![Step 3.3 - buttons](images/wiring_3_buttons.png)
+
+**3.4 Display**
+
+![Step 3.4 - display](images/wiring_4_display.png)
+
+**All together** ([full-size SVG](images/wiring.svg)):
+
+![Complete wiring](images/wiring.png)
+
+The same connections as a table:
 
 The Pico is mounted **upside down** (pins up). Its pin labels are printed
 on the pin side — wire by the labels.
@@ -217,6 +243,10 @@ in [firmware/README.md](firmware/README.md).
 ## Step 5 — Assemble
 
 ![Exploded view](images/exploded.png)
+
+Everything in place (right half of the shell cut away):
+
+![Cutaway](images/cutaway.png)
 
 Component layout in the bottom of the case:
 
@@ -304,7 +334,8 @@ trackball drive RetroBat's menus: **[pc/README.md](pc/README.md)**.
 
 | Folder | What's in it |
 |---|---|
-| [`print/`](print/README.md) | ready-to-print Bambu Studio project, STLs, print settings |
+| [`print/`](print/README.md) | ready-to-print Bambu Studio projects for X1C / P1S / A1 (all-in-one + per part), STLs, print settings |
+| `tools/` | `make_print_files.py` — rebuilds every 3MF from the STLs |
 | [`firmware/`](firmware/README.md) | MicroPython firmware, the patched MicroPython build and its source patch |
 | [`pc/`](pc/README.md) | Windows / TeknoParrot / RetroBat setup and the menu script |
 | `images/` | renders, wiring and overview diagrams |

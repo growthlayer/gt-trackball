@@ -1,25 +1,41 @@
 # Printing the case
 
-## The easy way: `gt-trackball-case.3mf`
+Three parts — **top shell**, **bottom plate**, **2 display clips** — in
+PLA, no supports. Every file below comes with the print settings built in.
 
-One Bambu Studio project with every part placed and every setting below
-already applied (X1 Carbon, 0.4 nozzle, Bambu PLA Basic, 0.20 mm). Open
-it, press **Slice all**, send each plate.
+## Ready-to-print Bambu Studio projects
 
-| Plate | Parts | Time | PLA |
+Pick the folder for your printer, open a file, press **Slice all**, print.
+
+| Folder | Printer |
+|---|---|
+| [`bambu-x1c/`](bambu-x1c/) | X1 Carbon / X1 / X1E |
+| [`bambu-p1s/`](bambu-p1s/) | P1S / P1P |
+| [`bambu-a1/`](bambu-a1/) | A1 (not the A1 mini — the top shell needs a 256 mm bed) |
+
+Each folder has:
+
+| File | Contents | X1C / P1S | A1 |
 |---|---|---|---|
-| 1 | top shell (deck down) + 2 display clips | ≈ 5 h 50 min | ≈ 323 g |
-| 2 | bottom plate | ≈ 2 h 40 min | ≈ 123 g |
+| **`gt-trackball-all.3mf`** | everything, 2 plates: top shell + clips, then the bottom plate | 8 h 26 min, 446 g | 8 h 49 min, 446 g |
+| `top.3mf` | top shell only | 5 h 46 min, 322 g | 6 h 00 min, 322 g |
+| `bottom.3mf` | bottom plate only | 2 h 37 min, 123 g | 2 h 46 min, 123 g |
+| `clips.3mf` | the 2 display clips | 3 min | 3 min |
 
-Printing on the **A1** instead: switch the printer at the top-left of
-Bambu Studio; it keeps the process settings. The project slices with no
-warnings and both plates fit the 256 mm bed with the brim.
+All twelve slice with no warnings (0.4 mm nozzle, Bambu PLA Basic,
+0.20 mm layers + the settings below). Another Bambu printer with a 256 mm
+bed: open any of them and switch the printer at the top-left of Bambu
+Studio — the process settings carry over.
 
-The individual `top.stl`, `bottom.stl` and `clips.stl` are here too for
-other slicers — use the settings below.
+## Other slicers (Prusa, Orca, Cura, ...)
 
-Tested target: Bambu Lab X1C / A1 (256 mm bed). The top shell is
-201 × 225 mm, so it needs the full bed.
+The plain models are in [`stl/`](stl/) — `top.stl`, `bottom.stl`,
+`clips.stl`, already in print orientation. An STL can't carry settings, so
+use the table below. Bed needed: about 256 × 256 mm (top shell is
+201 × 225 mm, plus a 5 mm brim).
+
+To rebuild the projects after changing the design:
+`python tools/make_print_files.py` (needs Bambu Studio installed).
 
 ## Common (all parts)
 
@@ -32,13 +48,13 @@ Tested target: Bambu Lab X1C / A1 (256 mm bed). The top shell is
 | Top / bottom layers | 5 / 4 | the 4.5 mm deck is mostly solid anyway |
 | Infill | 15 % gyroid | |
 | Supports | **none** | every part is designed support-free |
-| Brim | 5 mm outer (the top shell's big flat footprint lifts at the corners) | the 3MF applies it to every part; harmless on the others |
+| Brim | 5 mm outer | the top shell's big flat footprint lifts at the corners; harmless on the other parts |
 | Seam | rear | keeps the seam off the palm bevel |
 | Elephant-foot compensation | 0.15 mm | keeps the ball bore and button holes on size |
 
 ## Per part
 
-| File | Orientation | Notes |
+| Part | Orientation | Notes |
 |---|---|---|
 | `top.stl` | **as exported** — deck face down on the bed | The Ø76.1 ball bore, the four Ø5.1 locating pins and the corner pillars all point up. The 45° palm bevel is self-supporting. The e-ink window is a through-cut, nothing to bridge. |
 | `bottom.stl` | as exported, flat side down | Battery tray walls, Pico standoffs and board posts point up. The Ø13 × 1.2 feet recesses are on the bed side and print as-is. |

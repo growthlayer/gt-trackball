@@ -90,9 +90,14 @@ Credit and thanks to **vkschannel** for the original case.
 
 ## Files to upload
 
-- **Print profile:** `print/gt-trackball-case.3mf` (upload as the Bambu
-  Studio project — MakerWorld reads the plates and settings from it)
-- **Model files:** `print/top.stl`, `print/bottom.stl`, `print/clips.stl`
+- **Model files:** `print/stl/top.stl`, `print/stl/bottom.stl`, `print/stl/clips.stl`
+- **Print profiles** — MakerWorld takes one Bambu Studio project per
+  profile; upload each as its own profile so people get the right printer:
+  - `print/bambu-x1c/gt-trackball-all.3mf` — "X1 Carbon · all parts, 2 plates"
+  - `print/bambu-p1s/gt-trackball-all.3mf` — "P1S · all parts, 2 plates"
+  - `print/bambu-a1/gt-trackball-all.3mf` — "A1 · all parts, 2 plates"
+  - optionally the per-part projects (`top.3mf`, `bottom.3mf`, `clips.3mf`)
+    as extra profiles for people who print one part at a time
 - Optional "other files": `trackball_bt_case.scad` (editable source)
 
 Firmware stays on GitHub (MakerWorld only hosts print files); the
