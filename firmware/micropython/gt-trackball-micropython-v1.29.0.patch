@@ -1,0 +1,99 @@
+diff --git a/extmod/btstack/modbluetooth_btstack.c b/extmod/btstack/modbluetooth_btstack.c
+index 7694a18..4345647 100644
+--- a/extmod/btstack/modbluetooth_btstack.c
++++ b/extmod/btstack/modbluetooth_btstack.c
+@@ -203,6 +203,22 @@ static void btstack_packet_handler_generic(uint8_t packet_type, uint16_t channel
+ 
+     uint8_t event_type = hci_event_packet_get_type(packet);
+ 
++    #if MICROPY_PY_BLUETOOTH_ENABLE_PAIRING_BONDING
++    // BTstack waits for the application to confirm Just Works (and numeric
++    // comparison) pairing; without this, pairing stalls until the SMP
++    // timeout. There is no UI to confirm on, so accept.
++    if (event_type == SM_EVENT_JUST_WORKS_REQUEST) {
++        DEBUG_printf("  --> sm just works request\n");
++        sm_just_works_confirm(sm_event_just_works_request_get_handle(packet));
++        return;
++    }
++    if (event_type == SM_EVENT_NUMERIC_COMPARISON_REQUEST) {
++        DEBUG_printf("  --> sm numeric comparison request\n");
++        sm_numeric_comparison_confirm(sm_event_numeric_comparison_request_get_handle(packet));
++        return;
++    }
++    #endif // MICROPY_PY_BLUETOOTH_ENABLE_PAIRING_BONDING
++
+     if (event_type == HCI_EVENT_LE_META) {
+         DEBUG_printf("  --> hci le meta\n");
+         switch (hci_event_le_meta_get_subevent_code(packet)) {
+@@ -376,6 +392,14 @@ static btstack_packet_callback_registration_t hci_event_callback_registration =
+     .callback = &btstack_packet_handler_generic
+ };
+ 
++#if MICROPY_PY_BLUETOOTH_ENABLE_PAIRING_BONDING
++// SM events (pairing complete, just-works request, ...) are only delivered
++// to handlers registered with sm_add_event_handler.
++static btstack_packet_callback_registration_t sm_event_callback_registration = {
++    .callback = &btstack_packet_handler_generic
++};
++#endif
++
+ #if MICROPY_PY_BLUETOOTH_ENABLE_GATT_CLIENT
+ // For when the handler is being used for service discovery.
+ static void btstack_packet_handler_discover_services(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size) {
+@@ -643,6 +667,11 @@ int mp_bluetooth_init(void) {
+     // Register for HCI events.
+     hci_add_event_handler(&hci_event_callback_registration);
+ 
++    #if MICROPY_PY_BLUETOOTH_ENABLE_PAIRING_BONDING
++    // Register for Security Manager events.
++    sm_add_event_handler(&sm_event_callback_registration);
++    #endif
++
+     // Register for ATT server events.
+     att_server_register_packet_handler(&btstack_packet_handler_att_server);
+ 
+@@ -898,7 +927,10 @@ int mp_bluetooth_gatts_register_service_begin(bool append) {
+         assert(handle == BTSTACK_GAP_DEVICE_NAME_HANDLE);
+ 
+         att_db_util_add_service_uuid16(0x1801);
+-        att_db_util_add_characteristic_uuid16(0x2a05, ATT_PROPERTY_READ, ATT_SECURITY_NONE, ATT_SECURITY_NONE, NULL, 0);
++        // Service Changed must be INDICATE (with a CCCD, which att_db_util adds
++        // for INDICATE): macOS enables its indications after pairing, and
++        // a read-only one makes that fail (and crashed macOS 26 bluetoothd).
++        att_db_util_add_characteristic_uuid16(0x2a05, ATT_PROPERTY_INDICATE, ATT_SECURITY_NONE, ATT_SECURITY_NONE, NULL, 0);
+     }
+ 
+     return 0;
+@@ -919,7 +951,11 @@ static uint16_t att_read_callback(hci_con_handle_t connection_handle, uint16_t a
+     // Note this will be a no-op if the ringbuffer implementation is being used, as the Python callback cannot
+     // be executed synchronously. This is currently always the case for btstack.
+     if ((buffer == NULL) && (buffer_size == 0)) {
+-        if (!mp_bluetooth_gatts_on_read_request(connection_handle, att_handle)) {
++        // mp_bluetooth_gatts_on_read_request() returns 0 (GATTS_NO_ERROR) to
++        // allow the read and non-zero to deny it (as the NimBLE binding uses
++        // it). The original `!` inverted that, so every read of a dynamic
++        // value returned zero bytes on ports with sync events (rp2).
++        if (mp_bluetooth_gatts_on_read_request(connection_handle, att_handle) != MP_BLUETOOTH_GATTS_NO_ERROR) {
+             DEBUG_printf("att_read_callback: read request denied\n");
+             return 0;
+         }
+diff --git a/ports/rp2/boards/RPI_PICO2_W/mpconfigboard.h b/ports/rp2/boards/RPI_PICO2_W/mpconfigboard.h
+index e470917..bcd60da 100644
+--- a/ports/rp2/boards/RPI_PICO2_W/mpconfigboard.h
++++ b/ports/rp2/boards/RPI_PICO2_W/mpconfigboard.h
+@@ -19,3 +19,15 @@
+ 
+ int mp_hal_is_pin_reserved(int n);
+ #define MICROPY_HW_PIN_RESERVED(i) mp_hal_is_pin_reserved(i)
++
++// GT Trackball: enable BLE pairing/bonding (needed for HID-over-GATT hosts)
++#define MICROPY_PY_BLUETOOTH_ENABLE_PAIRING_BONDING (1)
++
++// GT Trackball: the trackball's USB/PS2 chip picks USB or PS/2 at its own
++// power-up from the level of DATA/CLOCK (J1 -> GP2/GP3): pulled down = USB,
++// pulled up = PS/2. Its 5 V comes up with the Pico's, so pull both lines up
++// in the first milliseconds of boot (RP2350 pads default to pull-down).
++#define MICROPY_BOARD_STARTUP() do { \
++        gpio_init(2); gpio_pull_up(2); \
++        gpio_init(3); gpio_pull_up(3); \
++} while (0)

@@ -1,0 +1,31 @@
+GT Trackball -- licensing
+=========================
+
+This repository contains two kinds of work under two licences.
+
+1. Hardware design -- Creative Commons Attribution-ShareAlike 4.0
+   (CC BY-SA 4.0), https://creativecommons.org/licenses/by-sa/4.0/
+
+   Applies to: trackball_bt_case.scad, everything in print/ and images/.
+
+   This design is a remix of "3-Inch Arcade Trackball Case"
+   (https://www.thingiverse.com/thing:7334881) by vkschannel, itself a
+   remix of https://www.thingiverse.com/thing:5914322, both licensed
+   Creative Commons Attribution-ShareAlike. As required by that licence,
+   this remix is shared under the same terms. If you share or remix it,
+   credit vkschannel and this project, and keep the same licence.
+
+2. Software -- MIT License (see LICENSE-CODE)
+
+   Applies to: everything in firmware/, pc/ and renders/, except the
+   third-party parts below.
+
+Third-party software
+--------------------
+
+- firmware/micropython/*.uf2 is a build of MicroPython v1.29.0
+  (https://micropython.org, MIT License, (c) Damien P. George and
+  contributors) with the changes in
+  firmware/micropython/gt-trackball-micropython-v1.29.0.patch.
+- The firmware installs aioble and usb-device-hid from micropython-lib
+  (MIT License) with `mpremote mip install`.

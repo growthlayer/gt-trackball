@@ -1,0 +1,357 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1187" viewBox="0 0 1500 1187"><style>
+.h1{font:bold 22px Segoe UI,Arial,sans-serif;fill:#111}.h2{font:bold 17px Segoe UI,Arial,sans-serif;fill:#111}
+.hb{font:bold 13px Segoe UI,Arial,sans-serif;fill:#111}.hr{font:bold 13px Segoe UI,Arial,sans-serif;fill:#c01c28}
+.dh{font:bold 12px Segoe UI,Arial,sans-serif;fill:#222}
+.s{font:11.5px Segoe UI,Arial,sans-serif;fill:#555}.sr{font:bold 11.5px Segoe UI,Arial,sans-serif;fill:#c01c28}
+.t{font:13px Segoe UI,Arial,sans-serif;fill:#222}.d{font:12.5px Segoe UI,Arial,sans-serif;fill:#222}.dr{font:12.5px Segoe UI,Arial,sans-serif;fill:#c01c28}
+.pin{font:bold 12px Consolas,monospace;fill:#222}.pinx{font:12px Consolas,monospace;fill:#aaa}.num{font:11px Consolas,monospace;fill:#777}
+.tiny{font:10px Consolas,monospace;fill:#222}.th{font:bold 13px Segoe UI,Arial,sans-serif;fill:#fff}.n{font:12.5px Segoe UI,Arial,sans-serif;fill:#333}
+.box{fill:#f6f6f6;stroke:#444;stroke-width:1.4}.pico{fill:#e3f1e3;stroke:#2a6;stroke-width:2}.pico2{fill:#e3f1e3;stroke:#2a6;stroke-width:1.4}
+.jack{fill:#aaa;stroke:#444}.res{fill:#f3e3c3;stroke:#7a5a2a}.tbl{fill:#fafafa;stroke:#bbb}.note{fill:#fffbe6;stroke:#c9a400}
+.p5{stroke:#c01c28;stroke-width:2.5;fill:none}.g{stroke:#222;stroke-width:2.2;fill:none}.ctl{stroke:#986a44;stroke-width:2.2;fill:none}
+.usb{stroke:#7a3fb0;stroke-width:3;fill:none;stroke-dasharray:6 3}
+</style><rect width="1500" height="1187" fill="#fff"/><text x="24" y="34" class="h1" text-anchor="start" >GT Trackball - complete wiring (Pico 2 W, Bluetooth + USB)</text>
+<text x="24" y="56" class="s" text-anchor="start" >Colour key:  red = +5 V   black = GND   orange = 3V3   blue = trackball   green = buttons   purple = e-paper   brown = control / sense.   Pin numbers are the Pico's physical pins (1-40).</text>
+<text x="24" y="92" class="h2" text-anchor="start" >1. Pico 2 W pin map</text>
+<text x="24" y="110" class="s" text-anchor="start" >Top view (USB jack up). The Pico is mounted UPSIDE DOWN in the case, pins up: the GP labels printed</text>
+<text x="24" y="124" class="s" text-anchor="start" >on the pin side of the board match this chart - wire by the printed labels, not by position.</text>
+<rect x="265" y="150" width="170" height="534" class="pico" rx="8"/>
+<rect x="332.0" y="138" width="36" height="16" class="jack" rx="2"/>
+<text x="350.0" y="190" class="hb" text-anchor="middle" >Pico 2 W</text>
+<rect x="259" y="162" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="277" y="172" class="pinx" text-anchor="start" >GP0</text>
+<text x="255" y="172" class="num" text-anchor="end" >1</text>
+<rect x="259" y="188" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="277" y="198" class="pinx" text-anchor="start" >GP1</text>
+<text x="255" y="198" class="num" text-anchor="end" >2</text>
+<rect x="259" y="214" width="12" height="12" fill="#222" stroke="#222" stroke-width="1.5"/>
+<text x="277" y="224" class="pin" text-anchor="start" >GND</text>
+<text x="255" y="224" class="num" text-anchor="end" >3</text>
+<polyline points="235,220 203,220" class="w" style="stroke:#222;stroke-width:2.5;fill:none"/>
+<text x="198" y="224" class="d" text-anchor="end" style="fill:#222">MOSFET module VIN-</text>
+<rect x="259" y="240" width="12" height="12" fill="#1a5fb4" stroke="#1a5fb4" stroke-width="1.5"/>
+<text x="277" y="250" class="pin" text-anchor="start" >GP2</text>
+<text x="255" y="250" class="num" text-anchor="end" >4</text>
+<polyline points="235,246 203,246" class="w" style="stroke:#1a5fb4;stroke-width:2.5;fill:none"/>
+<text x="198" y="250" class="d" text-anchor="end" style="fill:#1a5fb4">Trackball J1 DATA</text>
+<rect x="259" y="266" width="12" height="12" fill="#1a5fb4" stroke="#1a5fb4" stroke-width="1.5"/>
+<text x="277" y="276" class="pin" text-anchor="start" >GP3</text>
+<text x="255" y="276" class="num" text-anchor="end" >5</text>
+<polyline points="235,272 203,272" class="w" style="stroke:#1a5fb4;stroke-width:2.5;fill:none"/>
+<text x="198" y="276" class="d" text-anchor="end" style="fill:#1a5fb4">Trackball J1 CLOCK</text>
+<rect x="259" y="292" width="12" height="12" fill="#26a269" stroke="#26a269" stroke-width="1.5"/>
+<text x="277" y="302" class="pin" text-anchor="start" >GP4</text>
+<text x="255" y="302" class="num" text-anchor="end" >6</text>
+<polyline points="235,298 203,298" class="w" style="stroke:#26a269;stroke-width:2.5;fill:none"/>
+<text x="198" y="302" class="d" text-anchor="end" style="fill:#26a269">LEFT button pin 2</text>
+<rect x="259" y="318" width="12" height="12" fill="#26a269" stroke="#26a269" stroke-width="1.5"/>
+<text x="277" y="328" class="pin" text-anchor="start" >GP5</text>
+<text x="255" y="328" class="num" text-anchor="end" >7</text>
+<polyline points="235,324 203,324" class="w" style="stroke:#26a269;stroke-width:2.5;fill:none"/>
+<text x="198" y="328" class="d" text-anchor="end" style="fill:#26a269">RIGHT button pin 2</text>
+<rect x="259" y="344" width="12" height="12" fill="#222" stroke="#222" stroke-width="1.5"/>
+<text x="277" y="354" class="pin" text-anchor="start" >GND</text>
+<text x="255" y="354" class="num" text-anchor="end" >8</text>
+<polyline points="235,350 203,350" class="w" style="stroke:#222;stroke-width:2.5;fill:none"/>
+<text x="198" y="354" class="d" text-anchor="end" style="fill:#222">Buttons pin 1 (LED -), all 3</text>
+<rect x="259" y="370" width="12" height="12" fill="#26a269" stroke="#26a269" stroke-width="1.5"/>
+<text x="277" y="380" class="pin" text-anchor="start" >GP6</text>
+<text x="255" y="380" class="num" text-anchor="end" >9</text>
+<polyline points="235,376 203,376" class="w" style="stroke:#26a269;stroke-width:2.5;fill:none"/>
+<text x="198" y="380" class="d" text-anchor="end" style="fill:#26a269">MENU button pin 2</text>
+<rect x="259" y="396" width="12" height="12" fill="#26a269" stroke="#26a269" stroke-width="1.5"/>
+<text x="277" y="406" class="pin" text-anchor="start" >GP7</text>
+<text x="255" y="406" class="num" text-anchor="end" >10</text>
+<polyline points="235,402 203,402" class="w" style="stroke:#26a269;stroke-width:2.5;fill:none"/>
+<text x="198" y="406" class="d" text-anchor="end" style="fill:#26a269">Buttons pin 3 (common), all 3</text>
+<rect x="259" y="422" width="12" height="12" fill="#9141ac" stroke="#9141ac" stroke-width="1.5"/>
+<text x="277" y="432" class="pin" text-anchor="start" >GP8</text>
+<text x="255" y="432" class="num" text-anchor="end" >11</text>
+<polyline points="235,428 203,428" class="w" style="stroke:#9141ac;stroke-width:2.5;fill:none"/>
+<text x="198" y="432" class="d" text-anchor="end" style="fill:#9141ac">e-paper DC</text>
+<rect x="259" y="448" width="12" height="12" fill="#9141ac" stroke="#9141ac" stroke-width="1.5"/>
+<text x="277" y="458" class="pin" text-anchor="start" >GP9</text>
+<text x="255" y="458" class="num" text-anchor="end" >12</text>
+<polyline points="235,454 203,454" class="w" style="stroke:#9141ac;stroke-width:2.5;fill:none"/>
+<text x="198" y="458" class="d" text-anchor="end" style="fill:#9141ac">e-paper CS</text>
+<rect x="259" y="474" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="277" y="484" class="pinx" text-anchor="start" >GND</text>
+<text x="255" y="484" class="num" text-anchor="end" >13</text>
+<rect x="259" y="500" width="12" height="12" fill="#9141ac" stroke="#9141ac" stroke-width="1.5"/>
+<text x="277" y="510" class="pin" text-anchor="start" >GP10</text>
+<text x="255" y="510" class="num" text-anchor="end" >14</text>
+<polyline points="235,506 203,506" class="w" style="stroke:#9141ac;stroke-width:2.5;fill:none"/>
+<text x="198" y="510" class="d" text-anchor="end" style="fill:#9141ac">e-paper CLK</text>
+<rect x="259" y="526" width="12" height="12" fill="#9141ac" stroke="#9141ac" stroke-width="1.5"/>
+<text x="277" y="536" class="pin" text-anchor="start" >GP11</text>
+<text x="255" y="536" class="num" text-anchor="end" >15</text>
+<polyline points="235,532 203,532" class="w" style="stroke:#9141ac;stroke-width:2.5;fill:none"/>
+<text x="198" y="536" class="d" text-anchor="end" style="fill:#9141ac">e-paper DIN</text>
+<rect x="259" y="552" width="12" height="12" fill="#9141ac" stroke="#9141ac" stroke-width="1.5"/>
+<text x="277" y="562" class="pin" text-anchor="start" >GP12</text>
+<text x="255" y="562" class="num" text-anchor="end" >16</text>
+<polyline points="235,558 203,558" class="w" style="stroke:#9141ac;stroke-width:2.5;fill:none"/>
+<text x="198" y="562" class="d" text-anchor="end" style="fill:#9141ac">e-paper RST</text>
+<rect x="259" y="578" width="12" height="12" fill="#9141ac" stroke="#9141ac" stroke-width="1.5"/>
+<text x="277" y="588" class="pin" text-anchor="start" >GP13</text>
+<text x="255" y="588" class="num" text-anchor="end" >17</text>
+<polyline points="235,584 203,584" class="w" style="stroke:#9141ac;stroke-width:2.5;fill:none"/>
+<text x="198" y="588" class="d" text-anchor="end" style="fill:#9141ac">e-paper BUSY</text>
+<rect x="259" y="604" width="12" height="12" fill="#222" stroke="#222" stroke-width="1.5"/>
+<text x="277" y="614" class="pin" text-anchor="start" >GND</text>
+<text x="255" y="614" class="num" text-anchor="end" >18</text>
+<polyline points="235,610 203,610" class="w" style="stroke:#222;stroke-width:2.5;fill:none"/>
+<text x="198" y="614" class="d" text-anchor="end" style="fill:#222">e-paper GND</text>
+<rect x="259" y="630" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="277" y="640" class="pinx" text-anchor="start" >GP14</text>
+<text x="255" y="640" class="num" text-anchor="end" >19</text>
+<rect x="259" y="656" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="277" y="666" class="pinx" text-anchor="start" >GP15</text>
+<text x="255" y="666" class="num" text-anchor="end" >20</text>
+<rect x="429" y="656" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="423" y="666" class="pinx" text-anchor="end" >GP16</text>
+<text x="445" y="666" class="num" text-anchor="start" >21</text>
+<rect x="429" y="630" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="423" y="640" class="pinx" text-anchor="end" >GP17</text>
+<text x="445" y="640" class="num" text-anchor="start" >22</text>
+<rect x="429" y="604" width="12" height="12" fill="#222" stroke="#222" stroke-width="1.5"/>
+<text x="423" y="614" class="pin" text-anchor="end" >GND</text>
+<text x="445" y="614" class="num" text-anchor="start" >23</text>
+<polyline points="465,610 497,610" class="w" style="stroke:#222;stroke-width:2.5;fill:none"/>
+<text x="502" y="614" class="d" text-anchor="start" style="fill:#222">USB-C pigtail black</text>
+<rect x="429" y="578" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="423" y="588" class="pinx" text-anchor="end" >GP18</text>
+<text x="445" y="588" class="num" text-anchor="start" >24</text>
+<rect x="429" y="552" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="423" y="562" class="pinx" text-anchor="end" >GP19</text>
+<text x="445" y="562" class="num" text-anchor="start" >25</text>
+<rect x="429" y="526" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="423" y="536" class="pinx" text-anchor="end" >GP20</text>
+<text x="445" y="536" class="num" text-anchor="start" >26</text>
+<rect x="429" y="500" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="423" y="510" class="pinx" text-anchor="end" >GP21</text>
+<text x="445" y="510" class="num" text-anchor="start" >27</text>
+<rect x="429" y="474" width="12" height="12" fill="#222" stroke="#222" stroke-width="1.5"/>
+<text x="423" y="484" class="pin" text-anchor="end" >GND</text>
+<text x="445" y="484" class="num" text-anchor="start" >28</text>
+<polyline points="465,480 497,480" class="w" style="stroke:#222;stroke-width:2.5;fill:none"/>
+<text x="502" y="484" class="d" text-anchor="start" style="fill:#222">MOSFET module J1 GND</text>
+<rect x="429" y="448" width="12" height="12" fill="#986a44" stroke="#986a44" stroke-width="1.5"/>
+<text x="423" y="458" class="pin" text-anchor="end" >GP22</text>
+<text x="445" y="458" class="num" text-anchor="start" >29</text>
+<polyline points="465,454 497,454" class="w" style="stroke:#986a44;stroke-width:2.5;fill:none"/>
+<text x="502" y="458" class="d" text-anchor="start" style="fill:#986a44">MOSFET module TRIG/PWM</text>
+<rect x="429" y="422" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="423" y="432" class="pinx" text-anchor="end" >RUN</text>
+<text x="445" y="432" class="num" text-anchor="start" >30</text>
+<rect x="429" y="396" width="12" height="12" fill="#986a44" stroke="#986a44" stroke-width="1.5"/>
+<text x="423" y="406" class="pin" text-anchor="end" >GP26</text>
+<text x="445" y="406" class="num" text-anchor="start" >31</text>
+<polyline points="465,402 497,402" class="w" style="stroke:#986a44;stroke-width:2.5;fill:none"/>
+<text x="502" y="406" class="d" text-anchor="start" style="fill:#986a44">Battery sensor S</text>
+<rect x="429" y="370" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="423" y="380" class="pinx" text-anchor="end" >GP27</text>
+<text x="445" y="380" class="num" text-anchor="start" >32</text>
+<rect x="429" y="344" width="12" height="12" fill="#222" stroke="#222" stroke-width="1.5"/>
+<text x="423" y="354" class="pin" text-anchor="end" >GND</text>
+<text x="445" y="354" class="num" text-anchor="start" >33</text>
+<polyline points="465,350 497,350" class="w" style="stroke:#222;stroke-width:2.5;fill:none"/>
+<text x="502" y="354" class="d" text-anchor="start" style="fill:#222">Battery sensor -</text>
+<rect x="429" y="318" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="423" y="328" class="pinx" text-anchor="end" >GP28</text>
+<text x="445" y="328" class="num" text-anchor="start" >34</text>
+<rect x="429" y="292" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="423" y="302" class="pinx" text-anchor="end" >ADC_VREF</text>
+<text x="445" y="302" class="num" text-anchor="start" >35</text>
+<rect x="429" y="266" width="12" height="12" fill="#e66100" stroke="#e66100" stroke-width="1.5"/>
+<text x="423" y="276" class="pin" text-anchor="end" >3V3</text>
+<text x="445" y="276" class="num" text-anchor="start" >36</text>
+<polyline points="465,272 497,272" class="w" style="stroke:#e66100;stroke-width:2.5;fill:none"/>
+<text x="502" y="276" class="d" text-anchor="start" style="fill:#e66100">e-paper VCC  (3V3 only!)</text>
+<rect x="429" y="240" width="12" height="12" fill="#fff" stroke="#bbb" stroke-width="1.5"/>
+<text x="423" y="250" class="pinx" text-anchor="end" >3V3_EN</text>
+<text x="445" y="250" class="num" text-anchor="start" >37</text>
+<rect x="429" y="214" width="12" height="12" fill="#222" stroke="#222" stroke-width="1.5"/>
+<text x="423" y="224" class="pin" text-anchor="end" >GND</text>
+<text x="445" y="224" class="num" text-anchor="start" >38</text>
+<polyline points="465,220 497,220" class="w" style="stroke:#222;stroke-width:2.5;fill:none"/>
+<text x="502" y="224" class="d" text-anchor="start" style="fill:#222">GND bus (charger VO-)</text>
+<rect x="429" y="188" width="12" height="12" fill="#c01c28" stroke="#c01c28" stroke-width="1.5"/>
+<text x="423" y="198" class="pin" text-anchor="end" >VSYS</text>
+<text x="445" y="198" class="num" text-anchor="start" >39</text>
+<polyline points="465,194 497,194" class="w" style="stroke:#c01c28;stroke-width:2.5;fill:none"/>
+<text x="502" y="198" class="d" text-anchor="start" style="fill:#c01c28">+5 V bus (charger VO+)</text>
+<rect x="429" y="162" width="12" height="12" fill="#c01c28" stroke="#c01c28" stroke-width="1.5"/>
+<text x="423" y="172" class="pin" text-anchor="end" >VBUS</text>
+<text x="445" y="172" class="num" text-anchor="start" >40</text>
+<polyline points="465,168 497,168" class="w" style="stroke:#c01c28;stroke-width:2.5;fill:none"/>
+<text x="502" y="172" class="d" text-anchor="start" style="fill:#c01c28">USB-C pigtail red (charge)</text>
+<text x="760" y="92" class="h2" text-anchor="start" >2. Power, charging and sleep switching</text>
+<rect x="760" y="108" width="250" height="54" class="box" rx="4"/>
+<text x="770" y="128" class="hb" text-anchor="start" >USB-A D-type feedthrough (rear wall)</text>
+<text x="770" y="146" class="s" text-anchor="start" >outside: A-to-A cable to a PC USB 3 port</text>
+<polyline points="1010,135 1180,135" class="usb"/>
+<rect x="1180" y="115" width="290" height="44" class="pico2" rx="6"/>
+<text x="1190" y="133" class="hb" text-anchor="start" >Pico micro-USB jack</text>
+<text x="1190" y="150" class="s" text-anchor="start" >(short micro-USB-to-A cable inside)</text>
+<text x="1020" y="127" class="s" text-anchor="start" >USB data + 5 V</text>
+<rect x="880" y="250" width="210" height="150" class="box" rx="4"/>
+<text x="890" y="270" class="hb" text-anchor="start" >Charger + boost board</text>
+<text x="890" y="286" class="s" text-anchor="start" >24 x 19, USB-C in, adjustable out</text>
+<text x="890" y="302" class="sr" text-anchor="start" >trimpot: set OUT to 5.00 V FIRST</text>
+<rect x="856" y="320" width="24" height="26" class="jack" rx="3"/>
+<text x="886" y="338" class="pin" text-anchor="start" >USB-C</text>
+<polyline points="856,328 800,328 800,246" class="p5"/>
+<text x="806" y="242" class="dr" text-anchor="start" >Pico VBUS (pin 40)</text>
+<polyline points="856,340 780,340 780,380" class="g"/>
+<text x="764" y="396" class="d" text-anchor="start" >Pico GND (pin 23)</text>
+<text x="764" y="414" class="s" text-anchor="start" >both via a short USB-C</text>
+<text x="764" y="427" class="s" text-anchor="start" >male pigtail (red / black)</text>
+<text x="920" y="392" class="pin" text-anchor="middle" >B-</text>
+<text x="970" y="392" class="pin" text-anchor="middle" >B+</text>
+<polyline points="920,400 920,440" class="g"/>
+<polyline points="970,400 970,440" class="p5"/>
+<rect x="890" y="440" width="200" height="46" class="box" rx="4"/>
+<text x="900" y="460" class="hb" text-anchor="start" >LiPo 3.7 V  52 x 35 x 10</text>
+<text x="900" y="476" class="s" text-anchor="start" >red -&gt; B+    black -&gt; B-</text>
+<text x="1082" y="334" class="pin" text-anchor="end" >VO+</text>
+<text x="1082" y="374" class="pin" text-anchor="end" >VO-</text>
+<polyline points="1090,330 1140,330" class="p5"/>
+<polyline points="1090,370 1160,370" class="g"/>
+<polyline points="1140,210 1140,330" class="p5"/>
+<text x="1134" y="202" class="hr" text-anchor="end" >+5 V bus</text>
+<circle cx="1140" cy="210" r="3.5" fill="#c01c28"/>
+<polyline points="1140,210 1170,210" class="p5"/>
+<text x="1176" y="214" class="d" text-anchor="start" >Pico VSYS (pin 39)</text>
+<circle cx="1140" cy="242" r="3.5" fill="#c01c28"/>
+<polyline points="1140,242 1170,242" class="p5"/>
+<text x="1176" y="246" class="d" text-anchor="start" >MOSFET module VIN+</text>
+<text x="1176" y="264" class="s" text-anchor="start" >(one lever connector does the split)</text>
+<polyline points="1160,370 1160,400" class="g"/>
+<text x="1168" y="362" class="hb" text-anchor="start" >GND bus</text>
+<circle cx="1160" cy="400" r="3.5" fill="#222"/>
+<polyline points="1160,400 1190,400" class="g"/>
+<text x="1196" y="404" class="d" text-anchor="start" >Pico GND (pin 38)</text>
+<text x="1196" y="420" class="s" text-anchor="start" >also makes the battery sense ground common</text>
+<rect x="1190" y="460" width="290" height="190" class="box" rx="4"/>
+<text x="1200" y="480" class="hb" text-anchor="start" >MOSFET module (XY-MOS, 2x D4184)</text>
+<text x="1200" y="496" class="s" text-anchor="start" >low-side switch; gate R + 100k pull-down on board</text>
+<text x="1200" y="520" class="pin" text-anchor="start" >VIN+</text><text x="1470" y="520" class="d" text-anchor="end" >+5 V bus</text>
+<text x="1200" y="542" class="pin" text-anchor="start" >VIN-</text><text x="1470" y="542" class="d" text-anchor="end" >GND - pin 3</text>
+<text x="1200" y="564" class="pin" text-anchor="start" >OUT+</text><text x="1470" y="564" class="d" text-anchor="end" >J1 +5V, ball RGB yellow</text>
+<text x="1200" y="586" class="pin" text-anchor="start" >OUT-</text><text x="1470" y="586" class="d" text-anchor="end" >J1 GND, ball RGB black (switched)</text>
+<text x="1200" y="608" class="pin" text-anchor="start" >TRIG/PWM</text><text x="1470" y="608" class="d" text-anchor="end" >GP22 - pin 29</text>
+<text x="1200" y="630" class="pin" text-anchor="start" >GND (J1)</text><text x="1470" y="630" class="d" text-anchor="end" >GND - pin 28</text>
+<text x="1200" y="670" class="s" text-anchor="start" >Off until GP22 goes high; J1 holes come in groups of 3</text>
+<text x="1200" y="684" class="s" text-anchor="start" >(any hole in a group) - go by the labels on the back.</text>
+<rect x="760" y="520" width="410" height="168" class="box" rx="4"/>
+<text x="770" y="540" class="hb" text-anchor="start" >0-25 V voltage sensor (30k / 7.5k, divides by 5)</text>
+<text x="770" y="556" class="s" text-anchor="start" >VSYS is boosted 5 V, so the cell is read here instead</text>
+<text x="770" y="580" class="pin" text-anchor="start" >VCC screw</text><text x="1160" y="580" class="d" text-anchor="end" >charger B+</text>
+<text x="770" y="602" class="pin" text-anchor="start" >S</text><text x="1160" y="602" class="d" text-anchor="end" >GP26 - pin 31</text>
+<text x="770" y="624" class="pin" text-anchor="start" >-</text><text x="1160" y="624" class="d" text-anchor="end" >AGND - pin 33</text>
+<text x="770" y="646" class="pin" text-anchor="start" >GND screw, +</text><text x="1160" y="646" class="dr" text-anchor="end" >leave empty</text>
+<text x="770" y="672" class="s" text-anchor="start" >GND screw to B- would bypass the charger's battery protection.</text>
+<text x="24" y="760" class="h2" text-anchor="start" >3. Wire list by component</text>
+<rect x="24" y="776" width="286" height="218" class="tbl" rx="4"/>
+<rect x="24" y="776" width="286" height="28" fill="#1a5fb4" rx="4"/>
+<text x="34" y="795" class="th" text-anchor="start" >Trackball J1 (PS/2)</text>
+<text x="34" y="826" class="pin" text-anchor="start" >+5V</text>
+<text x="300" y="826" class="d" text-anchor="end" >MOSFET module OUT+</text>
+<text x="34" y="848" class="pin" text-anchor="start" >GND</text>
+<text x="300" y="848" class="d" text-anchor="end" >MOSFET module OUT-</text>
+<text x="34" y="870" class="pin" text-anchor="start" >DATA</text>
+<text x="300" y="870" class="d" text-anchor="end" >GP2 - pin 4</text>
+<text x="34" y="892" class="pin" text-anchor="start" >CLOCK</text>
+<text x="300" y="892" class="d" text-anchor="end" >GP3 - pin 5</text>
+<text x="34" y="914" class="pin" text-anchor="start" >M / R / L</text>
+<text x="300" y="914" class="d" text-anchor="end" >unused</text>
+<text x="34" y="936" class="pin" text-anchor="start" >stock USB cable</text>
+<text x="300" y="936" class="d" text-anchor="end" >unplugged from J1</text>
+<text x="34" y="958" class="pin" text-anchor="start" >RGB yellow</text>
+<text x="300" y="958" class="d" text-anchor="end" >MOSFET module OUT+</text>
+<text x="34" y="980" class="pin" text-anchor="start" >RGB black</text>
+<text x="300" y="980" class="d" text-anchor="end" >MOSFET module OUT-</text>
+<rect x="314" y="776" width="286" height="218" class="tbl" rx="4"/>
+<rect x="314" y="776" width="286" height="28" fill="#26a269" rx="4"/>
+<text x="324" y="795" class="th" text-anchor="start" >Each button (x3), by plug pin</text>
+<text x="324" y="826" class="pin" text-anchor="start" >2 switch</text>
+<text x="590" y="826" class="d" text-anchor="end" >LEFT: GP4 - pin 6</text>
+<text x="324" y="848" class="pin" text-anchor="start" ></text>
+<text x="590" y="848" class="d" text-anchor="end" >RIGHT: GP5 - pin 7</text>
+<text x="324" y="870" class="pin" text-anchor="start" ></text>
+<text x="590" y="870" class="d" text-anchor="end" >MENU: GP6 - pin 9</text>
+<text x="324" y="892" class="pin" text-anchor="start" >3 LED+/com</text>
+<text x="590" y="892" class="d" text-anchor="end" >GP7 - pin 10 (all 3)</text>
+<text x="324" y="914" class="pin" text-anchor="start" >1 LED -</text>
+<text x="590" y="914" class="d" text-anchor="end" >GND - pin 8 (all 3)</text>
+<text x="324" y="936" class="pin" text-anchor="start" ></text>
+<text x="590" y="936" class="d" text-anchor="end" >latch toward you, wires down,</text>
+<text x="324" y="958" class="pin" text-anchor="start" ></text>
+<text x="590" y="958" class="d" text-anchor="end" >pins 1-2-3 left to right;</text>
+<text x="324" y="980" class="pin" text-anchor="start" ></text>
+<text x="590" y="980" class="d" text-anchor="end" >wire markings vary: go by position</text>
+<rect x="604" y="776" width="286" height="218" class="tbl" rx="4"/>
+<rect x="604" y="776" width="286" height="28" fill="#9141ac" rx="4"/>
+<text x="614" y="795" class="th" text-anchor="start" >e-paper HAT (8-pin JST)</text>
+<text x="614" y="826" class="pin" text-anchor="start" >VCC</text>
+<text x="880" y="826" class="d" text-anchor="end" >3V3 - pin 36</text>
+<text x="614" y="848" class="pin" text-anchor="start" >GND</text>
+<text x="880" y="848" class="d" text-anchor="end" >GND - pin 18</text>
+<text x="614" y="870" class="pin" text-anchor="start" >DIN</text>
+<text x="880" y="870" class="d" text-anchor="end" >GP11 - pin 15</text>
+<text x="614" y="892" class="pin" text-anchor="start" >CLK</text>
+<text x="880" y="892" class="d" text-anchor="end" >GP10 - pin 14</text>
+<text x="614" y="914" class="pin" text-anchor="start" >CS</text>
+<text x="880" y="914" class="d" text-anchor="end" >GP9 - pin 12</text>
+<text x="614" y="936" class="pin" text-anchor="start" >DC</text>
+<text x="880" y="936" class="d" text-anchor="end" >GP8 - pin 11</text>
+<text x="614" y="958" class="pin" text-anchor="start" >RST</text>
+<text x="880" y="958" class="d" text-anchor="end" >GP12 - pin 16</text>
+<text x="614" y="980" class="pin" text-anchor="start" >BUSY</text>
+<text x="880" y="980" class="d" text-anchor="end" >GP13 - pin 17</text>
+<rect x="894" y="776" width="286" height="218" class="tbl" rx="4"/>
+<rect x="894" y="776" width="286" height="28" fill="#c01c28" rx="4"/>
+<text x="904" y="795" class="th" text-anchor="start" >Charger + boost board</text>
+<text x="904" y="826" class="pin" text-anchor="start" >USB-C pigtail red</text>
+<text x="1170" y="826" class="d" text-anchor="end" >VBUS - pin 40</text>
+<text x="904" y="848" class="pin" text-anchor="start" >USB-C pigtail blk</text>
+<text x="1170" y="848" class="d" text-anchor="end" >GND - pin 23</text>
+<text x="904" y="870" class="pin" text-anchor="start" >B+</text>
+<text x="1170" y="870" class="d" text-anchor="end" >battery red + sensor VCC</text>
+<text x="904" y="892" class="pin" text-anchor="start" >B-</text>
+<text x="1170" y="892" class="d" text-anchor="end" >battery black</text>
+<text x="904" y="914" class="pin" text-anchor="start" >VO+</text>
+<text x="1170" y="914" class="d" text-anchor="end" >pin 39 + MOSFET VIN+</text>
+<text x="904" y="936" class="pin" text-anchor="start" >VO-</text>
+<text x="1170" y="936" class="d" text-anchor="end" >GND - pin 38</text>
+<text x="904" y="958" class="pin" text-anchor="start" >output</text>
+<text x="1170" y="958" class="d" text-anchor="end" >latches on at first USB</text>
+<text x="904" y="980" class="pin" text-anchor="start" >trimpot</text>
+<text x="1170" y="980" class="d" text-anchor="end" >5.00 V, set first</text>
+<rect x="1184" y="776" width="286" height="218" class="tbl" rx="4"/>
+<rect x="1184" y="776" width="286" height="28" fill="#986a44" rx="4"/>
+<text x="1194" y="795" class="th" text-anchor="start" >MOSFET module + sensor</text>
+<text x="1194" y="826" class="pin" text-anchor="start" >TRIG/PWM</text>
+<text x="1460" y="826" class="d" text-anchor="end" >GP22 - pin 29</text>
+<text x="1194" y="848" class="pin" text-anchor="start" >J1 GND</text>
+<text x="1460" y="848" class="d" text-anchor="end" >GND - pin 28</text>
+<text x="1194" y="870" class="pin" text-anchor="start" >VIN+ / VIN-</text>
+<text x="1460" y="870" class="d" text-anchor="end" >+5 V bus / pin 3</text>
+<text x="1194" y="892" class="pin" text-anchor="start" >OUT+ / OUT-</text>
+<text x="1460" y="892" class="d" text-anchor="end" >J1 + RGB (+ / switched -)</text>
+<text x="1194" y="914" class="pin" text-anchor="start" >sensor VCC</text>
+<text x="1460" y="914" class="d" text-anchor="end" >charger B+</text>
+<text x="1194" y="936" class="pin" text-anchor="start" >sensor S</text>
+<text x="1460" y="936" class="d" text-anchor="end" >GP26 - pin 31</text>
+<text x="1194" y="958" class="pin" text-anchor="start" >sensor -</text>
+<text x="1460" y="958" class="d" text-anchor="end" >AGND - pin 33</text>
+<text x="1194" y="980" class="pin" text-anchor="start" >sensor GND, +</text>
+<text x="1460" y="980" class="d" text-anchor="end" >leave empty</text>
+<rect x="24" y="1012" width="1452" height="161" class="note" rx="6"/>
+<text x="40" y="1038" class="n" text-anchor="start" >- Bring-up order: (1) with NOTHING on VO+, set the charger/boost trimpot to 5.00 V.  (2) MOSFET module on USB power.  (3) battery sensor.  (4) VO+ to VSYS + VIN+, pigtail.</text>
+<text x="40" y="1060" class="n" text-anchor="start" >- The charger/boost board replaces the separate MT3608 - it already boosts. Its only charge input is its USB-C jack, hence the short USB-C male pigtail from the Pico's VBUS/GND.</text>
+<text x="40" y="1082" class="n" text-anchor="start" >- Charging can draw up to ~1 A through the Pico's USB: use a USB 3 port (900 mA). If the port drops out while charging, the board's charge-current resistor can be raised.</text>
+<text x="40" y="1104" class="n" text-anchor="start" >- Sleep: GP22 low turns the MOSFET module off (trackball + ball RGB); GP7 goes low (button LEDs off) and a pressed button still pulls its GPIO low, so a press wakes it.</text>
+<text x="40" y="1148" class="n" text-anchor="start" >- The charger output is off (about 0.2 V) until its USB-C jack first sees USB power, then stays on (no auto-off).</text>
+<text x="40" y="1126" class="n" text-anchor="start" >- Never put 5 V on the e-paper VCC.  All grounds are common.  If the cursor moves the wrong way or the axes are swapped, fix it in config.py, not in the wiring.</text></svg>
