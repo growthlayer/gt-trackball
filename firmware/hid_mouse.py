@@ -16,6 +16,7 @@
 # ============================================================
 
 import struct
+import time
 import asyncio
 import bluetooth
 import aioble
@@ -31,6 +32,23 @@ _FLAG_WRITE_ENCRYPTED = const(0x1000)
 _EVENTS = {1: "connect", 2: "disconnect", 3: "gatt write", 4: "gatt read",
            21: "mtu", 27: "conn params", 28: "encryption", 29: "get secret",
            30: "set secret", 31: "passkey action"}
+
+
+# Connection interval the host chose (ms). Reports are sent at most once
+# per interval: anything faster only queues up in the stack and the cursor
+# lags further and further behind the ball. Updated from the stack's
+# connection-update event; 15 ms until the host says otherwise.
+_interval_ms = 15.0
+
+
+def _interval_irq(event, data):
+    global _interval_ms
+    if event == 27:                            # _IRQ_CONNECTION_UPDATE
+        try:
+            _interval_ms = data[1] * 1.25      # units of 1.25 ms
+        except Exception:
+            pass
+    # returns None so aioble's own handlers still run
 
 
 def _log_irq(event, data):
@@ -89,6 +107,9 @@ class BleMouse:
         self._conn = None
         self._debug = debug
         self._sent = 0
+        self._last_tx = time.ticks_ms()
+        self._logged_iv = None
+        aioble.core.register_irq_handler(_interval_irq, None)
         if debug:
             aioble.core.register_irq_handler(_log_irq, None)
         aioble.config(gap_name=name)          # GAP name = advertised name
@@ -202,6 +223,13 @@ class BleMouse:
     def send(self, buttons, dx, dy, wheel=0):
         if not self.connected:
             return
+        if self._logged_iv != _interval_ms:     # rare: log the host's choice
+            self._logged_iv = _interval_ms
+            blelog.log("interval %.2f ms" % _interval_ms)
+        now = time.ticks_ms()
+        if time.ticks_diff(now, self._last_tx) < _interval_ms:
+            return False                       # too soon: main loop keeps the motion
+        self._last_tx = now
         clamp = lambda v: -127 if v < -127 else (127 if v > 127 else v)
         payload = struct.pack("<Bbbb", buttons & 0x07,
                               clamp(dx), clamp(dy), clamp(wheel))
