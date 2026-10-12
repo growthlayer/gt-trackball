@@ -57,7 +57,7 @@ Plate 2: bottom plate.
 
 **You'll also need** a 3" USB/PS2 arcade trackball, a Raspberry Pi Pico 2 W,
 a Waveshare 2.13" e-Paper HAT V4, a small charger + boost board, a
-52 × 35 × 10 mm LiPo, a MOSFET module, a voltage sensor module, three 30 mm
+103450-size LiPo (fits the 52 × 35 × 10 mm tray), a MOSFET module, a voltage sensor module, three 30 mm
 lit buttons, a USB-A panel feedthrough, 4 M3 heat-set inserts and a few
 screws. **Full parts list, wiring diagrams, firmware and step-by-step build
 guide:**
@@ -84,9 +84,11 @@ Credit and thanks to **vkschannel** for the original case.
 4. `images/render_top.png`
 5. `images/render_rear.png` — USB port
 6. `images/exploded.png` — exploded view with part numbers
-7. `images/overview.png` — how it connects
-8. `images/wiring.png` — full wiring
-9. `images/layout_top.png` — where everything sits
+7. `images/cutaway.png` — everything in place, shell cut away
+8. `images/layout_top.png` — where everything sits in the bottom half
+9. `images/overview.png` — how it connects
+10. `images/wiring.png` — full wiring with the pin-to-pin chart
+11. `images/wiring_1_power.png` … `wiring_4_display.png` — the four wiring steps (optional)
 
 ## Files to upload
 
