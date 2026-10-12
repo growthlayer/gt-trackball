@@ -170,12 +170,19 @@ class BleMouse:
         return c is not None and c.is_connected() and (c.encrypted or not self._pairing)
 
     async def advertise_and_serve(self):
-        """One advertise/connect cycle; returns when disconnected."""
-        async with await aioble.advertise(
-                250_000,
-                name=self._name,
-                appearance=_APPEARANCE_MOUSE,
-                services=[_SVC_HID]) as conn:
+        """One advertise/connect cycle; returns when disconnected.
+        Advertises fast (30 ms) for the first 30 s so a host looking for
+        its known mouse finds it quickly, then slowly (250 ms) to save
+        battery -- the usual HID reconnection pattern."""
+        try:
+            conn = await aioble.advertise(
+                30_000, name=self._name, appearance=_APPEARANCE_MOUSE,
+                services=[_SVC_HID], timeout_ms=30_000)
+        except asyncio.TimeoutError:
+            conn = await aioble.advertise(
+                250_000, name=self._name, appearance=_APPEARANCE_MOUSE,
+                services=[_SVC_HID])
+        async with conn:
             self._conn = conn
             try:
                 who = conn.device.addr_hex()
