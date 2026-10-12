@@ -41,4 +41,34 @@ if os.path.exists(raw):
         d.text((cx + 42, cy + 2), names[n], font=f, fill=(40, 40, 40))
     im.save(os.path.join(IMG, "exploded.png"), optimize=True)
     os.remove(raw)
+raw = os.path.join(IMG, "layout_raw.png")
+if os.path.exists(raw):
+    pts = {int(k): v for k, v in json.load(open(os.path.join(BUILD, "layout_callouts.json"))).items()}
+    src = Image.open(raw).convert("RGBA")
+    l, t, r, b = src.getchannel("A").point(lambda a: 255 if a > 40 else 0).getbbox()
+    m = 60; l, t, r, b = max(l - m, 0), max(t - m, 0), min(r + m, src.width), min(b + m, src.height)
+    bg = Image.new("RGBA", src.size, BG + (255,))
+    base = Image.alpha_composite(bg, src).convert("RGB").crop((l, t, r, b))
+    TOP, KEY = 110, 230
+    im = Image.new("RGB", (base.width, base.height + TOP + KEY), BG); im.paste(base, (0, TOP))
+    d = ImageDraw.Draw(im)
+    f = ImageFont.truetype("segoeui.ttf", 25); fn = ImageFont.truetype("segoeuib.ttf", 24)
+    fs = ImageFont.truetype("segoeuib.ttf", 18); ft = ImageFont.truetype("segoeuib.ttf", 36)
+    names = {3: "USB-A feedthrough (rear wall)", 5: "Trackball (hangs from the top deck)", 6: "Bottom plate",
+             7: "LiPo in its tray", 8: "Pico 2 W, pins up", 9: "Charger + 5 V boost",
+             10: "Voltage sensor", 11: "MOSFET module", 12: "M3 screw pillars (4)"}
+    for n, (x, y) in pts.items():
+        x -= l; y += TOP - t; rr = 21
+        d.ellipse([x - rr, y - rr, x + rr, y + rr], fill=(220, 60, 40), outline="white", width=3)
+        d.text((x, y), str(n), font=fn, fill="white", anchor="mm")
+    d.text((40, 30), "Component layout - bottom half, top shell lifted off", font=ft, fill=(30, 30, 30))
+    y0 = TOP + base.height + 20
+    for i, n in enumerate(sorted(names)):
+        cx, cy = 40 + (i // 5) * (im.width // 2), y0 + (i % 5) * 40
+        d.ellipse([cx, cy + 4, cx + 30, cy + 34], fill=(220, 60, 40))
+        d.text((cx + 15, cy + 19), str(n), font=fs, fill="white", anchor="mm")
+        d.text((cx + 42, cy + 2), names[n], font=f, fill=(40, 40, 40))
+    d.text((im.width - 40, y0 + 4 * 40 + 2), "numbers match the exploded view", font=f, fill=(120, 120, 120), anchor="ra")
+    im.save(os.path.join(IMG, "layout_top.png"), optimize=True)
+    os.remove(raw)
 print("annotated")

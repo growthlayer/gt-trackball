@@ -41,8 +41,9 @@ with any game, emulator or computer.
 9. [Golden Tee, TeknoParrot and RetroBat](#golden-tee-teknoparrot-and-retrobat)
 10. [Customising](#customising)
 11. [Troubleshooting](#troubleshooting)
-12. [Repository layout](#repository-layout)
-13. [Credits & licence](#credits--licence)
+12. [Build it with Claude Code (optional)](#build-it-with-claude-code-optional)
+13. [Repository layout](#repository-layout)
+14. [Credits & licence](#credits--licence)
 
 ---
 
@@ -67,33 +68,39 @@ sleeps, and a **voltage sensor** lets the Pico read the battery level.
 
 ### Electronics
 
-| | # | Part | Qty | Notes |
-|---|---|---|---|---|
-| <img src="images/part_trackball.png" width="90"> | 1 | **3" illuminated arcade trackball, USB/PS2** (generic, e.g. AliExpress "3 inch trackball LED USB") | 1 | Ball Ø76.2, mounting holes on an 80.5 mm square. Its own interface board stays: connector **J1** = +5V, DATA, CLOCK, GND, M, R, L |
-| <img src="images/part_pico.png" width="90"> | 2 | **Raspberry Pi Pico 2 W** (RP2350, with wireless) | 1 | Must be the **2 W**: the RP2350's 5 V-tolerant pins and Bluetooth are both needed. Headers soldered on (pins point up in the case) |
-| <img src="images/part_epaper.png" width="90"> | 3 | **Waveshare 2.13" e-Paper HAT V4** (250 × 122, Raspberry Pi format, 65 × 30.5 mm) | 1 | Wired with its 8-pin JST lead — it does not plug onto the Pico |
-| <img src="images/part_charger.png" width="90"> | 4 | **Charger + boost board**, "TP4056 type", 1 A charge, adjustable 4.2–28 V out, USB-C, 24 × 19 mm | 1 | Charges the LiPo and makes the 5 V rail. Set the output to **5.00 V** first |
-| <img src="images/part_battery.png" width="90"> | 5 | **LiPo pouch cell 3.7 V**, 52 × 35 × 10 mm (≈1000–1200 mAh), with protection | 1 | Sits in a tray; never clamp a pouch cell |
-| <img src="images/part_mosfet.png" width="90"> | 6 | **MOSFET trigger module** ("XY-MOS", 2 × D4184) | 1 | Switches the trackball off in sleep. A bare IRLZ44N + 220 Ω + 100 kΩ works too |
-| <img src="images/part_sensor.png" width="90"> | 7 | **0–25 V voltage sensor module** (30 k / 7.5 k divider, ÷5) | 1 | Battery level |
-| <img src="images/part_buttons.png" width="90"> | 8 | **Lit arcade buttons**, 30 mm (1-1/8"), 5 V LED, 3-wire XH harness | 3 | LEFT / MENU / RIGHT. Below-panel depth ≤ 60 mm |
-| <img src="images/part_usb.png" width="90"> | 9 | **USB-A female/female D-type panel feedthrough** (body Ø23.7, holes 19 × 24 mm diagonal) | 1 | The one external port |
-| | 10 | **Short micro-USB to USB-A cable** | 1 | Inside: Pico → feedthrough |
-| | 11 | **USB-C male pigtail, 2-wire** (red / black) | 1 | Pico VBUS → charger input |
-| | 12 | **USB-A to USB-A cable** (plain, no chip) | 1 | Outside: controller → computer (USB 3 port recommended for charging) |
-| | 13 | Dupont jumper wires (female), hookup wire, 3-way lever connectors, heat-shrink | — | Everything plugs or clamps |
+The links are examples that match the dimensions the case is designed for
+(no affiliate links). Equivalent parts from any seller work; check the sizes in the Notes column.
+
+| | # | Part | Qty | Notes | Buy |
+|---|---|---|---|---|---|
+| <img src="images/part_trackball.png" width="90"> | 1 | **3" illuminated arcade trackball, USB/PS2** (generic, e.g. AliExpress "3 inch trackball LED USB") | 1 | Ball Ø76.2, mounting holes on an 80.5 mm square. Its own interface board stays: connector **J1** = +5V, DATA, CLOCK, GND, M, R, L | [AliExpress](https://www.aliexpress.com/item/1005005806654620.html) |
+| <img src="images/part_pico.png" width="90"> | 2 | **Raspberry Pi Pico 2 W** (RP2350, with wireless) | 1 | Must be the **2 W**: the RP2350's 5 V-tolerant pins and Bluetooth are both needed. Headers soldered on (pins point up in the case) | [Amazon](https://www.amazon.com/dp/B0DQ7NHGH8) (Waveshare, headers on) |
+| <img src="images/part_epaper.png" width="90"> | 3 | **Waveshare 2.13" e-Paper HAT V4** (250 × 122, Raspberry Pi format, 65 × 30.5 mm) | 1 | Wired with its 8-pin JST lead — it does not plug onto the Pico | [Amazon](https://www.amazon.com/dp/B071S8HT76) |
+| <img src="images/part_charger.png" width="90"> | 4 | **Charger + boost board**, "TP4056 type", 1 A charge, adjustable 4.2–28 V out, USB-C, 24 × 19 mm | 1 | Charges the LiPo and makes the 5 V rail. Set the output to **5.00 V** first | [Amazon](https://www.amazon.com/dp/B0H4FLDTQV) |
+| <img src="images/part_battery.png" width="90"> | 5 | **LiPo pouch cell 3.7 V, size 103450** (≈ 50 × 34 × 10 mm, ≈2000 mAh), with protection board and JST-PH lead | 1 | Must fit the 52 × 35 × 10 mm tray including its protection board — check the listed size. Never clamp a pouch cell | [Amazon](https://www.amazon.com/dp/B0F1KBD9F6) |
+| <img src="images/part_mosfet.png" width="90"> | 6 | **MOSFET trigger module** ("XY-MOS", 2 × D4184) | 1 | Switches the trackball off in sleep. A bare IRLZ44N + 220 Ω + 100 kΩ works too | [Amazon](https://www.amazon.com/dp/B0BZ57XKXZ) |
+| <img src="images/part_sensor.png" width="90"> | 7 | **0–25 V voltage sensor module** (30 k / 7.5 k divider, ÷5) | 1 | Battery level | [Amazon](https://www.amazon.com/dp/B01HTC4XKY) (5-pack) |
+| <img src="images/part_buttons.png" width="90"> | 8 | **Lit arcade buttons**, 30 mm (1-1/8"), 5 V LED, 3-wire XH harness | 3 | LEFT / MENU / RIGHT. Below-panel depth ≤ 60 mm | [Amazon](https://www.amazon.com/dp/B07JFXQSM5) |
+| <img src="images/part_usb.png" width="90"> | 9 | **USB-A female/female D-type panel feedthrough** (body Ø23.7, holes 19 × 24 mm diagonal) | 1 | The one external port | [Amazon](https://www.amazon.com/dp/B0B2HVRDHL) |
+| | 10 | **Short micro-USB to USB-A cable** | 1 | Inside: Pico → feedthrough | [Amazon](https://www.amazon.com/dp/B013G4EAEI) |
+| | 11 | **USB-C male pigtail, 2-wire** (red / black) | 1 | Pico VBUS → charger input | [Amazon](https://www.amazon.com/dp/B0DCGJY4MR) |
+| | 12 | **USB-A to USB-A cable** (plain, no chip) | 1 | Outside: controller → computer (USB 3 port recommended for charging) | [Amazon](https://www.amazon.com/dp/B00HSS9JMW) |
+| | 13 | Dupont jumper wires (female), hookup wire, 3-way lever connectors, heat-shrink | — | Everything plugs or clamps | [Dupont wires](https://www.amazon.com/dp/B01EV70C78) · [WAGO 221-413](https://www.amazon.com/dp/B0719LG1TF) |
 
 ### Hardware
 
-| Part | Qty | Used for |
-|---|---|---|
-| M3 × L4 × D5 heat-set insert | 4 | corner pillars of the top shell |
-| M3 × 8 countersunk screw | 4 | bottom plate → inserts |
-| M3 × 8 self-tapping screw | 2 | USB-A feedthrough → rear wall |
-| M2.5 × 8 self-tapping screw | 2 | e-paper clips |
-| M2 × 6 self-tapping screw (optional) | 4 | Pico → standoffs (a dab of glue works too) |
-| 3M Bumpon SJ5312 rubber feet (Ø12.7 × 3.5) | 4 | recesses in the bottom plate |
-| Zip tie ≥150 mm or double-sided foam tape | 1 | battery retention |
+Screws are standard sizes; any assortment works.
+
+
+| Part | Qty | Used for | Buy |
+|---|---|---|---|
+| M3 × L4 × D5 heat-set insert | 4 | corner pillars of the top shell | [Amazon](https://www.amazon.com/dp/B0FDKYTMZ8) |
+| M3 × 8 countersunk screw | 4 | bottom plate → inserts | any |
+| M3 × 8 self-tapping screw | 2 | USB-A feedthrough → rear wall | any |
+| M2.5 × 8 self-tapping screw | 2 | e-paper clips | any |
+| M2 × 6 self-tapping screw (optional) | 4 | Pico → standoffs (a dab of glue works too) | any |
+| 3M Bumpon SJ5312 rubber feet (Ø12.7 × 3.5) | 4 | recesses in the bottom plate | [Amazon](https://www.amazon.com/dp/B000NG60SW) |
+| Zip tie ≥150 mm or double-sided foam tape | 1 | battery retention | any |
 
 ### Printed parts
 
@@ -336,6 +343,30 @@ trackball drive RetroBat's menus: **[pc/README.md](pc/README.md)**.
 
 ---
 
+## Build it with Claude Code (optional)
+
+This repository includes a [`CLAUDE.md`](CLAUDE.md) that turns
+[Claude Code](https://claude.com/claude-code) into a build assistant for this
+project. It knows the parts, the wiring, the safety checks and the firmware,
+and it can run the flashing and configuration commands on your computer
+for you (it asks before running each one).
+
+1. Install Python 3 and `pip install mpremote` (for talking to the Pico).
+2. Install Claude Code (see its website for the one-line installer) and sign in.
+3. Get this project: `git clone https://github.com/growthlayer/gt-trackball`
+   (or download the ZIP), then open a terminal in that folder and run `claude`.
+4. Ask it things like:
+   - *"Walk me through Step 3, one wire at a time."*
+   - *"Here's a photo of my wiring — does it match the power step?"*
+   - *"My Pico is plugged in holding BOOTSEL. Flash the firmware."*
+   - *"The cursor moves the wrong way left-right. Fix it."*
+   - *"Make the trackball slower in Bluetooth mode."*
+   - *"Make print files for my Prusa MK4."*
+   - *"It doesn't show up in Bluetooth. Help me find out why."*
+
+It works from the same instructions as this guide. Take your time with
+the multimeter checks it asks for: they protect the battery and the screen.
+
 ## Repository layout
 
 | Folder | What's in it |
@@ -346,7 +377,8 @@ trackball drive RetroBat's menus: **[pc/README.md](pc/README.md)**.
 | `harness/` | WireViz harness source (`gt-trackball.yml`) and its drawings + wire BOM |
 | [`firmware/`](firmware/README.md) | MicroPython firmware, the patched MicroPython build and its source patch |
 | [`pc/`](pc/README.md) | Windows / TeknoParrot / RetroBat setup and the menu script |
-| `images/` | renders, wiring, schematic and overview diagrams |
+| `images/` | renders, wiring and overview diagrams |
+| `CLAUDE.md` | instructions that make Claude Code a build assistant for this project |
 | `renders/` | Blender script that makes the product renders |
 | `trackball_bt_case.scad` | the parametric case |
 

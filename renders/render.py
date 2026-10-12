@@ -8,7 +8,7 @@
 #    renders/build/screen.png   e-paper screen image (250 x 122 aspect)
 #  Render:
 #    blender -b -P renders/render.py -- <repo root> <samples> <shots>
-#  shots: comma list of hero,top,rear,exploded,cutaway,thumbs (default all)
+#  shots: comma list of hero,top,rear,exploded,cutaway,layout,thumbs (default all)
 #  Writes images/*.png; exploded also writes renders/build/callouts.json
 #  (pixel positions of each numbered part, for annotate.py).
 # ============================================================
@@ -18,7 +18,7 @@ from mathutils import Vector
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 ROOT = argv[0] if argv else os.getcwd()
 SAMPLES = int(argv[1]) if len(argv) > 1 else 192
-SHOTS = (argv[2] if len(argv) > 2 else "hero,top,rear,exploded,cutaway,thumbs").split(",")
+SHOTS = (argv[2] if len(argv) > 2 else "hero,top,rear,exploded,cutaway,layout,thumbs").split(",")
 sys.path.insert(0, os.path.join(ROOT, "renders"))
 import components as C
 
@@ -167,6 +167,23 @@ if "exploded" in SHOTS:
     json.dump(pts, open(os.path.join(BUILD, "callouts.json"), "w"))
     render("exploded_raw")
     reset_layout(); floor.location.z = -3.5 * MM
+
+# ---------- layout: looking down into the bottom half (shell, buttons and screen lifted off) ----------
+if "layout" in SHOTS:
+    reset_layout(); show(ALL - {"shell", "buttons", "epaper"})
+    floor.location.z = -3.5 * MM
+    cam = camera("layout", (0.0, 0.035, 0.66), (0.0, 0.035, 0.0), lens=58, res=(1500, 1700))
+    anchors = {3: ("usb", (26.7, 150, 52)), 5: ("trackball", (0, -20, 70)), 6: ("plate", (-62, -45, 4)),
+               7: ("battery", (0, 95, 10)), 8: ("pico", (-8, 130, 13)), 9: ("charger", (-79.5, 107, 5)),
+               10: ("sensor", (-84, 70, 12)), 11: ("mosfet", (80.5, 107, 12)), 12: ("plate", (-92.5, 138.5, 4))}
+    from bpy_extras.object_utils import world_to_camera_view
+    bpy.context.view_layer.update()
+    W, Hh = scene.render.resolution_x, scene.render.resolution_y
+    pts = {n: [round(c) for c in (lambda v: (v.x * W, (1 - v.y) * Hh))(
+        world_to_camera_view(scene, cam, Vector(p) * MM + groups[k].location))] for n, (k, p) in anchors.items()}
+    os.makedirs(BUILD, exist_ok=True)
+    json.dump(pts, open(os.path.join(BUILD, "layout_callouts.json"), "w"))
+    render("layout_raw")
 
 # ---------- one render per component ----------
 if "thumbs" in SHOTS:
