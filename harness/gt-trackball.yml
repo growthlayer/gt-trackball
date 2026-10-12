@@ -1,0 +1,268 @@
+# GT Trackball wiring harness - WireViz source.
+# Render:  wireviz harness/gt-trackball.yml   (needs Graphviz)
+# Pin numbers on U1 are Raspberry Pi Pico 2 W physical pins. U1 is
+# mounted upside down (pins up): use the GP labels printed on its pin side.
+
+metadata:
+  title: GT Trackball - wiring harness
+  description: Every conductor, by bundle. Wire colours are a recommendation.
+
+options:
+  fontname: arial
+  bgcolor: WH
+  bgcolor_node: WH
+  bgcolor_connector: LB
+  bgcolor_cable: WH
+  bgcolor_bundle: WH
+  color_mode: SHORT
+  mini_bom_mode: false
+
+connectors:
+  U1:
+    type: Raspberry Pi Pico 2 W
+    subtype: 2.54 mm header, used pins only
+    pins:      [3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  14,   15,   16,   17,   18,  23,  28,  29,   31,        33,   36,   38,  39,   40]
+    pinlabels: [GND, GP2, GP3, GP4, GP5, GND, GP6, GP7, GP8, GP9, GP10, GP11, GP12, GP13, GND, GND, GND, GP22, GP26/ADC0, AGND, 3V3,  GND, VSYS, VBUS]
+    notes: mounted pins up
+  U1USB:
+    type: Pico 2 W micro-USB
+    pinlabels: [VBUS, D-, D+, GND]
+  J2:
+    type: USB-A panel feedthrough (rear port)
+    subtype: inner side
+    pinlabels: [VBUS, D-, D+, GND]
+    notes: outside - USB-A to USB-A cable to the PC
+  J3:
+    type: USB-C male pigtail
+    pinlabels: [VBUS, GND]
+    notes: plugs into PS1's USB-C input
+  PS1:
+    type: Charger + 5 V boost board
+    subtype: TP4056 type, 24 x 19 mm
+    pinlabels: [B+, B-, VO+, VO-]
+    notes: set VO+ to 5.00 V before connecting anything
+  BT1:
+    type: LiPo 3.7 V
+    subtype: 52 x 35 x 10 mm pouch
+    pinlabels: [+, -]
+  X1:
+    type: Lever connector, 3-way
+    subtype: WAGO 221-413 or similar
+    pinlabels: [IN, OUT, OUT]
+    notes: all three ports joined (+5 V split)
+  Q1:
+    type: MOSFET switch module
+    subtype: XY-MOS, 2x D4184
+    pinlabels: [VIN+, VIN-, OUT+, OUT-, TRIG, GND]
+    notes: OUT- is the switched ground
+  U2:
+    type: Voltage sensor module
+    subtype: 0-25 V, 30k/7.5k (divide by 5)
+    pinlabels: [VCC, GND, S, "+", "-"]
+    notes: GND screw stays EMPTY (would bypass the battery protection)
+  J1:
+    type: Trackball interface board J1
+    subtype: PS/2 (its own board, stock USB cable removed)
+    pinlabels: [+5V, DATA, CLOCK, GND, M, R, L]
+    notes: M / R / L not connected
+  P1:
+    type: Ball light (RGB string)
+    pinlabels: ["+ yellow", "- black"]
+  SW1:
+    type: Lit button LEFT (JZT-08)
+    subtype: 3-pin XH, pins by position
+    pinlabels: [LED-, SWITCH, LED+/COM]
+  SW2:
+    type: Lit button RIGHT (JZT-08)
+    subtype: 3-pin XH, pins by position
+    pinlabels: [LED-, SWITCH, LED+/COM]
+  SW3:
+    type: Lit button MENU (JZT-08)
+    subtype: 3-pin XH, pins by position
+    pinlabels: [LED-, SWITCH, LED+/COM]
+  DS1:
+    type: Waveshare 2.13" e-Paper HAT V4
+    subtype: 8-pin JST lead
+    pinlabels: [VCC, GND, DIN, CLK, CS, DC, RST, BUSY]
+    notes: 3.3 V only
+  S1:
+    style: simple
+    type: Splice
+    subtype: button LED+/COM
+  S2:
+    style: simple
+    type: Splice
+    subtype: button LED-
+
+cables:
+  W1:
+    category: bundle
+    type: micro-USB to USB-A cable
+    gauge: 28 AWG
+    length: 0.3
+    colors: [RD, WH, GN, BK]
+  W2:
+    category: bundle
+    type: charge input (pigtail)
+    gauge: 22 AWG
+    length: 0.15
+    colors: [RD, BK]
+  W3:
+    category: bundle
+    type: battery leads
+    gauge: 22 AWG
+    length: 0.1
+    colors: [RD, BK]
+  W4:
+    category: bundle
+    type: 5 V output
+    gauge: 22 AWG
+    length: 0.15
+    colors: [RD, BK]
+  W5:
+    category: bundle
+    type: 5 V distribution
+    gauge: 22 AWG
+    length: 0.15
+    colors: [RD, RD]
+  W6:
+    category: bundle
+    type: trackball switch control
+    gauge: 24 AWG
+    length: 0.2
+    colors: [BN, BK, BK]
+  W7:
+    category: bundle
+    type: battery sense
+    gauge: 24 AWG
+    length: 0.2
+    colors: [RD, BN, BK]
+  W8:
+    category: bundle
+    type: trackball + ball-light power
+    gauge: 22 AWG
+    length: 0.25
+    colors: [RD, BK, YE, BK]
+  W9:
+    category: bundle
+    type: PS/2 data
+    gauge: 24 AWG
+    length: 0.25
+    colors: [BU, BU]
+  W10:
+    category: bundle
+    type: display lead
+    gauge: 24 AWG
+    length: 0.2
+    colors: [OG, BK, VT, VT, VT, VT, VT, VT]
+  W11:
+    category: bundle
+    type: LEFT button
+    gauge: 24 AWG
+    length: 0.2
+    colors: [BK, GN, WH]
+  W12:
+    category: bundle
+    type: RIGHT button
+    gauge: 24 AWG
+    length: 0.2
+    colors: [BK, GN, WH]
+  W13:
+    category: bundle
+    type: MENU button
+    gauge: 24 AWG
+    length: 0.2
+    colors: [BK, GN, WH]
+  W14:
+    category: bundle
+    type: button buses
+    gauge: 24 AWG
+    length: 0.1
+    colors: [WH, BK]
+
+connections:
+  - - J2: [1-4]
+    - W1: [1-4]
+    - U1USB: [1-4]
+
+  - - J3: [1, 2]
+    - W2: [1, 2]
+    - U1: [40, 23]
+
+  - - PS1: [1, 2]
+    - W3: [1, 2]
+    - BT1: [1, 2]
+
+  - - PS1: [3]
+    - W4: [1]
+    - X1: [1]
+  - - PS1: [4]
+    - W4: [2]
+    - U1: [38]
+
+  - - X1: [2]
+    - W5: [1]
+    - U1: [39]
+  - - X1: [3]
+    - W5: [2]
+    - Q1: [1]
+
+  - - Q1: [5, 6, 2]
+    - W6: [1, 2, 3]
+    - U1: [29, 28, 3]
+
+  - - PS1: [1]
+    - W7: [1]
+    - U2: [1]
+  - - U2: [3, 5]
+    - W7: [2, 3]
+    - U1: [31, 33]
+
+  - - Q1: [3, 4, 3, 4]
+    - W8: [1, 2, 3, 4]
+  - - W8: [1, 2]
+    - J1: [1, 4]
+  - - W8: [3, 4]
+    - P1: [1, 2]
+
+  - - J1: [2, 3]
+    - W9: [1, 2]
+    - U1: [4, 5]
+
+  - - DS1: [1-8]
+    - W10: [1-8]
+    - U1: [36, 18, 15, 14, 12, 11, 16, 17]
+
+  - - SW1: [1, 2, 3]
+    - W11: [1, 2, 3]
+  - - W11: [1]
+    - S2
+  - - W11: [2]
+    - U1: [6]
+  - - W11: [3]
+    - S1
+
+  - - SW2: [1, 2, 3]
+    - W12: [1, 2, 3]
+  - - W12: [1]
+    - S2
+  - - W12: [2]
+    - U1: [7]
+  - - W12: [3]
+    - S1
+
+  - - SW3: [1, 2, 3]
+    - W13: [1, 2, 3]
+  - - W13: [1]
+    - S2
+  - - W13: [2]
+    - U1: [9]
+  - - W13: [3]
+    - S1
+
+  - - S1
+    - W14: [1]
+    - U1: [10]
+  - - S2
+    - W14: [2]
+    - U1: [8]

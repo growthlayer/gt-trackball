@@ -2,3 +2,6 @@ __pycache__/
 *.pyc
 renders/build/
 result.json
+*.kicad_prl
+kicad/*-backups/
+kicad/fp-info-cache

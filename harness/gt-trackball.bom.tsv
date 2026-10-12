@@ -1,0 +1,52 @@
+Id	Description	Qty	Unit	Designators
+1	Connector, Ball light (RGB string), 2 pins	1		P1
+2	Connector, Charger + 5 V boost board, TP4056 type, 24 x 19 mm, 4 pins	1		PS1
+3	Connector, Lever connector, 3-way, WAGO 221-413 or similar, 3 pins	1		X1
+4	Connector, LiPo 3.7 V, 52 x 35 x 10 mm pouch, 2 pins	1		BT1
+5	Connector, Lit button LEFT (JZT-08), 3-pin XH, pins by position, 3 pins	1		SW1
+6	Connector, Lit button MENU (JZT-08), 3-pin XH, pins by position, 3 pins	1		SW3
+7	Connector, Lit button RIGHT (JZT-08), 3-pin XH, pins by position, 3 pins	1		SW2
+8	Connector, MOSFET switch module, XY-MOS, 2x D4184, 6 pins	1		Q1
+9	Connector, Pico 2 W micro-USB, 4 pins	1		U1USB
+10	Connector, Raspberry Pi Pico 2 W, 2.54 mm header, used pins only, 24 pins	1		U1
+11	Connector, Splice, button LED+/COM	1		
+12	Connector, Splice, button LED-	1		
+13	Connector, Trackball interface board J1, PS/2 (its own board, stock USB cable removed), 7 pins	1		J1
+14	Connector, USB-A panel feedthrough (rear port), inner side, 4 pins	1		J2
+15	Connector, USB-C male pigtail, 2 pins	1		J3
+16	Connector, Voltage sensor module, 0-25 V, 30k/7.5k (divide by 5), 5 pins	1		U2
+17	Connector, Waveshare 2.13" e-Paper HAT V4, 8-pin JST lead, 8 pins	1		DS1
+18	Wire, 5 V distribution, 22 AWG, RD	0.3	m	W5
+19	Wire, 5 V output, 22 AWG, BK	0.15	m	W4
+20	Wire, 5 V output, 22 AWG, RD	0.15	m	W4
+21	Wire, LEFT button, 24 AWG, BK	0.2	m	W11
+22	Wire, LEFT button, 24 AWG, GN	0.2	m	W11
+23	Wire, LEFT button, 24 AWG, WH	0.2	m	W11
+24	Wire, MENU button, 24 AWG, BK	0.2	m	W13
+25	Wire, MENU button, 24 AWG, GN	0.2	m	W13
+26	Wire, MENU button, 24 AWG, WH	0.2	m	W13
+27	Wire, PS/2 data, 24 AWG, BU	0.5	m	W9
+28	Wire, RIGHT button, 24 AWG, BK	0.2	m	W12
+29	Wire, RIGHT button, 24 AWG, GN	0.2	m	W12
+30	Wire, RIGHT button, 24 AWG, WH	0.2	m	W12
+31	Wire, battery leads, 22 AWG, BK	0.1	m	W3
+32	Wire, battery leads, 22 AWG, RD	0.1	m	W3
+33	Wire, battery sense, 24 AWG, BK	0.2	m	W7
+34	Wire, battery sense, 24 AWG, BN	0.2	m	W7
+35	Wire, battery sense, 24 AWG, RD	0.2	m	W7
+36	Wire, button buses, 24 AWG, BK	0.1	m	W14
+37	Wire, button buses, 24 AWG, WH	0.1	m	W14
+38	Wire, charge input (pigtail), 22 AWG, BK	0.15	m	W2
+39	Wire, charge input (pigtail), 22 AWG, RD	0.15	m	W2
+40	Wire, display lead, 24 AWG, BK	0.2	m	W10
+41	Wire, display lead, 24 AWG, OG	0.2	m	W10
+42	Wire, display lead, 24 AWG, VT	1.2	m	W10
+43	Wire, micro-USB to USB-A cable, 28 AWG, BK	0.3	m	W1
+44	Wire, micro-USB to USB-A cable, 28 AWG, GN	0.3	m	W1
+45	Wire, micro-USB to USB-A cable, 28 AWG, RD	0.3	m	W1
+46	Wire, micro-USB to USB-A cable, 28 AWG, WH	0.3	m	W1
+47	Wire, trackball + ball-light power, 22 AWG, BK	0.5	m	W8
+48	Wire, trackball + ball-light power, 22 AWG, RD	0.25	m	W8
+49	Wire, trackball + ball-light power, 22 AWG, YE	0.25	m	W8
+50	Wire, trackball switch control, 24 AWG, BK	0.4	m	W6
+51	Wire, trackball switch control, 24 AWG, BN	0.2	m	W6

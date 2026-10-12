@@ -220,6 +220,23 @@ Power side:
   GND screw empty (wiring it to B− would bypass the battery protection).
 - Unplug the trackball's own USB cable from J1 — the Pico replaces it.
 
+**3.5 Schematic and harness drawings** — the same circuit two more ways,
+for anyone who wants the engineering version:
+
+- **Schematic** (KiCad 10, passes ERC with no errors or warnings):
+  [PDF](kicad/gt-trackball.pdf) · [SVG](kicad/gt-trackball.svg) ·
+  [KiCad project](kicad/). The MOSFET module and voltage sensor are drawn
+  as their real components (R3/R4/Q1 and R1/R2) so you can see what they do.
+
+  ![Schematic](images/schematic.png)
+
+- **Wiring harness** (WireViz): every conductor by bundle, with suggested
+  wire colours, gauges and lengths, and a wire BOM —
+  [SVG](harness/gt-trackball.svg) · [HTML with BOM](harness/gt-trackball.html) ·
+  [BOM (TSV)](harness/gt-trackball.bom.tsv).
+
+  ![Wiring harness](harness/gt-trackball.png)
+
 ---
 
 ## Step 4 — Bench test
@@ -335,10 +352,12 @@ trackball drive RetroBat's menus: **[pc/README.md](pc/README.md)**.
 | Folder | What's in it |
 |---|---|
 | [`print/`](print/README.md) | ready-to-print Bambu Studio projects for X1C / P1S / A1 (all-in-one + per part), STLs, print settings |
-| `tools/` | `make_print_files.py` — rebuilds every 3MF from the STLs |
+| `tools/` | `make_print_files.py` (every 3MF from the STLs), `make_wiring_diagrams.py` (step wiring pictures), `make_kicad_schematic.py` (the KiCad schematic) |
+| `kicad/` | KiCad 10 schematic project, PDF and SVG |
+| `harness/` | WireViz harness source (`gt-trackball.yml`) and its drawings + wire BOM |
 | [`firmware/`](firmware/README.md) | MicroPython firmware, the patched MicroPython build and its source patch |
 | [`pc/`](pc/README.md) | Windows / TeknoParrot / RetroBat setup and the menu script |
-| `images/` | renders, wiring and overview diagrams |
+| `images/` | renders, wiring, schematic and overview diagrams |
 | `renders/` | Blender script that makes the product renders |
 | `trackball_bt_case.scad` | the parametric case |
 
