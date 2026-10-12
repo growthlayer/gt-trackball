@@ -377,7 +377,7 @@ the multimeter checks it asks for: they protect the battery and the screen.
 | Folder | What's in it |
 |---|---|
 | [`print/`](print/README.md) | ready-to-print Bambu Studio projects for X1C / P1S / A1 (all-in-one + per part), STLs, print settings |
-| `tools/` | `make_print_files.py` (every 3MF from the STLs), `make_wiring_diagrams.py` (step wiring pictures), `make_kicad_schematic.py` (the KiCad schematic) |
+| `tools/` | `make_print_files.py` (every 3MF from the STLs), `make_wiring_diagrams.py` (step wiring pictures), `make_overview.py` (the "how it connects" picture), `make_kicad_schematic.py` (the KiCad schematic) |
 | `kicad/` | KiCad 10 schematic project, PDF and SVG |
 | `harness/` | WireViz harness source (`gt-trackball.yml`) and its drawings + wire BOM |
 | [`firmware/`](firmware/README.md) | MicroPython firmware, the patched MicroPython build and its source patch |
