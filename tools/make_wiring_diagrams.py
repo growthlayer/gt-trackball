@@ -16,6 +16,8 @@ G = 23                                      # routing grid pitch (px) = half the
 COLS, ROWS = 104, 75
 W, TOP = 2400, 190                          # TOP: room for the title and the step text
 H = TOP + ROWS * G + 90
+PANEL = 760                                 # connection chart on the right
+WT = W + PANEL
 
 C = dict(red="#d62828", blk="#222222", org="#f08c00", blu="#1c64d6", grn="#1f9d55", olv="#7a8b1e",
          pur="#8e44ad", brn="#9c5a1c", yel="#e9c400", usb="#7d7d85")
@@ -462,6 +464,76 @@ def junctions(paths):
                 dots.append((px(cell[0]), px(cell[1]), WIRES[idx[0]][2]))
     return dots
 
+# ---------------- connection chart ----------------
+BTN = ["LEFT", "RIGHT", "MENU"]
+BTN_PIN = {"1": "pin 1 (LED−)", "2": "pin 2 (switch)", "3": "pin 3 (LED+/com)"}
+PART = {"usb": "USB-A feedthrough", "pig": "USB-C pigtail", "bat": "Battery", "chg": "Charger", "lev": "Lever connector",
+        "fet": "MOSFET", "sen": "Voltage sensor", "tb": "Trackball J1", "ep": "E-paper"}
+
+def pin_name(p):
+    part, name = p.split(".", 1)
+    if part == "pico":
+        if name == "usb":
+            return "micro-USB jack"
+        n = int(name)
+        return f"{(PICO_L if n <= 20 else PICO_R)[n]}  (pin {n})"
+    if part.startswith("btn"):
+        return f"{BTN[int(part[3])]} button {BTN_PIN[name]}"
+    if part == "pig":
+        return "USB-C pigtail " + {"red": "red", "blk": "black"}[name]
+    if part == "bat":
+        return "Battery " + {"+": "red +", "-": "black −"}[name]
+    if part == "lev":
+        return "Lever connector"
+    if part == "fet":
+        name = name.rstrip("ab")
+    if part == "tb" and name.startswith("RGB"):
+        return "Ball light " + ("yellow +" if name.endswith("+") else "black −")
+    if part == "usb":
+        return "USB-A feedthrough"
+    return f"{PART[part]} {name}"
+
+STEP_TITLES = {"power": "3.1  Power and charging", "trackball": "3.2  Trackball",
+               "buttons": "3.3  Buttons", "display": "3.4  E-paper display"}
+
+def chart(focus):
+    o = []
+    x0 = W + 10
+    rect(o, x0, 20, PANEL - 40, H - 130, "#ffffff", "#d6d6dc", 12, 2)
+    t(o, x0 + 24, 64, "Connections" + ("" if not focus else " — this step"), 28, "#111", "start", True)
+    t(o, x0 + 24, 94, "Pico pin  →  where it goes", 18, "#666", "start")
+    y = 118
+    groups = [focus] if focus else list(STEP_TITLES)
+    RH = 38 if focus else 34
+    for g in groups:
+        rows = []
+        for a, b, col, grp, net in WIRES:
+            if grp != g:
+                continue
+            if a.startswith("pico."):
+                a, b = b, a
+            if b.startswith("pico.") and b != "pico.usb":
+                key = (0, int(b.split(".")[1]))
+                left, right = pin_name(b), pin_name(a)
+            else:
+                key = (1, 0)
+                left, right = pin_name(a), pin_name(b)
+            rows.append((key, col, left, right))
+        rows.sort(key=lambda r: r[0])
+        if not focus:
+            y += 14
+            t(o, x0 + 24, y + 16, STEP_TITLES[g], 21, "#333", "start", True)
+            y += 30
+        for k, (key, col, left, right) in enumerate(rows):
+            if k % 2 == 0:
+                o.append(f'<rect x="{x0 + 12}" y="{y}" width="{PANEL - 64}" height="{RH}" fill="#f3f4f7"/>')
+            o.append(f'<line x1="{x0 + 24}" y1="{y + RH / 2}" x2="{x0 + 58}" y2="{y + RH / 2}" stroke="{C[col]}" stroke-width="8" stroke-linecap="round"/>')
+            t(o, x0 + 72, y + RH / 2 + 7, left, 19, "#111", "start", key[0] == 0, key[0] == 0)
+            t(o, x0 + 268, y + RH / 2 + 7, "→", 19, "#888", "middle")
+            t(o, x0 + 288, y + RH / 2 + 7, right, 19, "#222", "start")
+            y += RH
+    return o
+
 def build(paths, focus=None, title="", subtitle="", steps=None):
     o = []
     for f in COMPONENTS:
@@ -489,7 +561,7 @@ def build(paths, focus=None, title="", subtitle="", steps=None):
     for x, y, col in junctions(paths):
         net_on = any(on[i] for i in paths if WIRES[i][2] == col)
         o.append(f'<circle cx="{x}" cy="{y}" r="8" fill="{C[col]}" stroke="#fff" stroke-width="2" opacity="{1 if net_on else 0.13}"/>')
-    head = [f'<rect width="{W}" height="{H}" fill="#fbfbfc"/>']
+    head = [f'<rect width="{WT}" height="{H}" fill="#fbfbfc"/>'] + chart(focus)
     t(head, 40, 50, title, 34, "#111", "start", True)
     t(head, 40, 84, subtitle, 18, "#555", "start")
     for k, s in enumerate(steps or []):
@@ -502,7 +574,7 @@ def build(paths, focus=None, title="", subtitle="", steps=None):
         head.append(f'<line x1="{x}" y1="{y}" x2="{x + 40}" y2="{y}" stroke="{C[c]}" stroke-width="7" stroke-linecap="round"/>')
         t(head, x + 52, y + 6, s, 16, "#333", "start")
     t(head, W - 40, H - 32, "bridge = wires cross, not joined     dot = wires joined", 16, "#555", "end")
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">'
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{WT}" height="{H}" viewBox="0 0 {WT} {H}">'
             + "".join(head) + f'<g transform="translate(0,{TOP})">' + "".join(o) + "</g></svg>")
 
 PAGES = [
@@ -549,8 +621,8 @@ if __name__ == "__main__":
         if exe:
             html = os.path.join(tmp, name + ".html")
             open(html, "w", encoding="utf-8").write(
-                f'<html><body style="margin:0"><img src="file:///{svg.replace(os.sep, "/")}" width="{W}"></body></html>')
-            subprocess.run([exe, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--window-size={W},{H}",
+                f'<html><body style="margin:0"><img src="file:///{svg.replace(os.sep, "/")}" width="{WT}"></body></html>')
+            subprocess.run([exe, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--window-size={WT},{H}",
                             f"--screenshot={os.path.join(OUT, name + '.png')}", "file:///" + html.replace(os.sep, "/")],
                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             print("wrote images/" + name + ".png")
