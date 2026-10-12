@@ -21,6 +21,7 @@ import bluetooth
 import aioble
 import aioble.security
 from micropython import const
+import blelog
 
 _APPEARANCE_MOUSE = const(0x03C2)
 _IO_NO_INPUT_OUTPUT = const(3)
@@ -141,7 +142,11 @@ class BleMouse:
 
     @property
     def connected(self):
-        return self._conn is not None and self._conn.is_connected()
+        # "connected" means a host can actually use the reports: with
+        # pairing available that needs an encrypted link (Windows ignores
+        # HID reports on an unencrypted one, while still showing a link).
+        c = self._conn
+        return c is not None and c.is_connected() and (c.encrypted or not self._pairing)
 
     async def advertise_and_serve(self):
         """One advertise/connect cycle; returns when disconnected."""
@@ -151,24 +156,48 @@ class BleMouse:
                 appearance=_APPEARANCE_MOUSE,
                 services=[_SVC_HID]) as conn:
             self._conn = conn
+            try:
+                who = conn.device.addr_hex()
+            except Exception:
+                who = "?"
+            blelog.log("connect " + who)
             if self._pairing:
                 asyncio.create_task(self._secure(conn))
             await conn.disconnected(timeout_ms=None)
             self._conn = None
+            blelog.log("disconnect")
 
     async def _secure(self, conn):
         """Ask the host to pair/encrypt (a bonded host re-encrypts with
         its stored key; a new one pairs "Just Works")."""
         await asyncio.sleep_ms(300)
-        if not conn.is_connected() or conn.encrypted:
+        if not conn.is_connected():
             return
-        try:
-            await aioble.security.pair(conn, bond=True, le_secure=False,
-                                       mitm=False, io=_IO_NO_INPUT_OUTPUT,
-                                       timeout_ms=15000)
-            print("ble: link encrypted=%s bonded=%s" % (conn.encrypted, conn.bonded))
-        except Exception as e:
-            print("ble: pairing:", repr(e))
+        if not conn.encrypted:
+            try:
+                await aioble.security.pair(conn, bond=True, le_secure=False,
+                                           mitm=False, io=_IO_NO_INPUT_OUTPUT,
+                                           timeout_ms=15000)
+            except Exception as e:
+                blelog.log("pair error " + repr(e))
+        # a bonded host may also re-encrypt on its own: give it 5 s more
+        for _ in range(50):
+            if not conn.is_connected() or conn.encrypted:
+                break
+            await asyncio.sleep_ms(100)
+        if not conn.is_connected():
+            return
+        blelog.log("link encrypted=%s bonded=%s" % (conn.encrypted, conn.bonded))
+        if not conn.encrypted:
+            # an unencrypted link looks connected but the host drops every
+            # report. Hang up so the host reconnects and tries again; if its
+            # stored key no longer matches, the screen stays on "pairing"
+            # (fix: remove + re-add the device on the computer).
+            blelog.log("not encrypted -> disconnecting so the host retries")
+            try:
+                await conn.disconnect()
+            except Exception as e:
+                blelog.log("disconnect error " + repr(e))
 
     def send(self, buttons, dx, dy, wheel=0):
         if not self.connected:

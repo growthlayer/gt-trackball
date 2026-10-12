@@ -1,13 +1,16 @@
 # ============================================================
 #  Bluetooth / USB Arcade Trackball - main firmware (Pico 2 W)
 #
-#  Modes (chosen at boot, re-evaluated on cable plug/unplug -> reboot):
+#  Modes (chosen at boot, re-evaluated on cable plug/unplug -> restart):
 #    USB cable present  -> wired USB HID mouse, radio off
 #    no cable           -> Bluetooth LE HID mouse
 #  There is no power switch: in Bluetooth mode, after IDLE_SLEEP_S the
 #  trackball is powered down and the Pico lightsleeps, waking on a
 #  button press. A hardware watchdog (Bluetooth mode only) reboots the
 #  firmware if it ever hangs.
+#  Mode switches and wake-up use a SOFT restart (restart() below): on
+#  battery the Pico stays powered, and after a hard machine.reset() its
+#  USB never comes back up (the host sees no device at all).
 #
 #  Maintenance: the USB cable also carries the MicroPython REPL, so
 #  config.py can be changed in the finished case with mpremote. Hold
@@ -17,6 +20,7 @@
 #  Deps:  mpremote mip install aioble usb-device-hid
 # ============================================================
 
+import os
 import time
 import asyncio
 import machine
@@ -50,7 +54,18 @@ def button_leds(on):
 
 
 time.sleep_ms(50)
-SAFE_MODE = buttons() == 3                   # exactly LEFT + RIGHT held at boot
+# The watchdog keeps running across a soft restart; restart() leaves this
+# flag so the next boot keeps feeding it (a starved watchdog would do the
+# hard reset that breaks USB).
+_WDT_FLAG = "wdt_on"
+try:
+    os.remove(_WDT_FLAG)
+    WDT_RUNNING = True
+except OSError:
+    WDT_RUNNING = False
+
+# exactly LEFT + RIGHT held at power-up (not on a wake-up press)
+SAFE_MODE = buttons() == 3 and not WDT_RUNNING
                                              # (all three = lying face-down, not safe mode)
 
 from display import Display
@@ -68,13 +83,26 @@ except Exception:
 USB_MODE = config.USB_MODE_ENABLED and usb_present()
 # No watchdog in USB mode: it's mains-powered (a hang can't drain the
 # battery) and a running watchdog would reset the board while mpremote
-# is copying files.
-wdt = None if (USB_MODE or SAFE_MODE) else machine.WDT(timeout=config.WDT_TIMEOUT_MS)
+# is copying files. Exception: one already running from Bluetooth mode
+# can't be stopped, so it has to be fed.
+wdt = (machine.WDT(timeout=config.WDT_TIMEOUT_MS)
+       if WDT_RUNNING or not (USB_MODE or SAFE_MODE) else None)
 
 
 def feed():
     if wdt:
         wdt.feed()
+
+
+def restart():
+    """Re-run the firmware from the top (mode switch, wake-up). Soft, not
+    machine.reset(): see the header."""
+    if wdt:
+        try:
+            open(_WDT_FLAG, "w").close()
+        except OSError:
+            pass
+    machine.soft_reset()
 
 
 disp = Display(wdt)
@@ -114,8 +142,7 @@ def go_to_sleep(stop_radio):
         feed()
         if buttons() or (config.USB_MODE_ENABLED and usb_present()):
             break
-    # simplest reliable way back to a clean radio/USB state
-    machine.reset()
+    restart()                                 # clean radio/USB state
 
 
 # ---------- shared tasks ----------
@@ -170,7 +197,7 @@ def run_usb():
         while True:
             await asyncio.sleep(5)
             if not usb_present():
-                machine.reset()               # cable pulled -> Bluetooth
+                restart()                     # cable pulled -> Bluetooth
             b = battery_state()
             if abs(b - disp.batt) >= 10:      # charging reading wobbles: no redraw spam
                 disp.set(batt=b)
@@ -189,6 +216,8 @@ def run_ble():
         aioble.security.load_secrets()       # bonding persists across reboots
     except Exception as e:
         print("bond store:", e)
+    import blelog
+    blelog.log("boot (reset cause %d)" % machine.reset_cause())
     mouse = BleMouse(config.DEVICE_NAME, getattr(config, "BLE_DEBUG", False))
     disp.set(state="pairing", charging=False, batt=battery_state())
 
@@ -211,7 +240,7 @@ def run_ble():
         while True:
             await asyncio.sleep(1)
             if config.USB_MODE_ENABLED and usb_present():
-                machine.reset()               # cable plugged -> USB mode
+                restart()                     # cable plugged -> USB mode
             if disp.idle_ms() >= config.IDLE_SLEEP_S * 1000:
                 go_to_sleep(stop_radio)       # never returns
             disp.set(state="connected" if mouse.connected else "pairing")
