@@ -168,8 +168,9 @@ should light the button.
 
 ## Step 3 — Wire it up
 
-Wire it in four steps — each picture shows only that step's wires.
-Everything plugs or clamps: Dupont jumpers on the Pico's pins, screw
+Wire it in four steps — each picture highlights only that step's wires.
+A small bridge means two wires cross without touching; a dot means they
+join. Everything plugs or clamps: Dupont jumpers on the Pico's pins, screw
 terminals on the modules, a lever connector for the 5 V split.
 
 **3.1 Power and charging**
@@ -209,33 +210,21 @@ on the pin side — wire by the labels.
 | GP26 (31) / AGND (33) | voltage sensor S / − |
 | VSYS (39) | +5 V from the charger's VO+ (a lever connector also feeds MOSFET VIN+) |
 | GND (38) | charger VO− |
-| VBUS (40) / GND (23) | USB-C pigtail red / black → charger's USB-C jack |
+| VBUS (40) / GND (3) | USB-C pigtail red / black → charger's USB-C jack |
 | micro-USB jack | short micro-USB-to-A cable → USB feedthrough |
 
 Power side:
 - **Charger** B+ / B− → LiPo. VO+ → Pico VSYS **and** MOSFET VIN+.
-- **MOSFET module** VIN− → GND; OUT+ → trackball J1 **+5V** and ball light
+- **MOSFET module** VIN− → Pico GND (23); OUT+ → trackball J1 **+5V** and ball light
   (yellow); OUT− → J1 **GND** and ball light (black).
 - **Voltage sensor** VCC screw → charger B+; S → GP26; − → AGND. Leave its
   GND screw empty (wiring it to B− would bypass the battery protection).
 - Unplug the trackball's own USB cable from J1 — the Pico replaces it.
 
-**3.5 Schematic and harness drawings** — the same circuit two more ways,
-for anyone who wants the engineering version:
-
-- **Schematic** (KiCad 10, passes ERC with no errors or warnings):
-  [PDF](kicad/gt-trackball.pdf) · [SVG](kicad/gt-trackball.svg) ·
-  [KiCad project](kicad/). The MOSFET module and voltage sensor are drawn
-  as their real components (R3/R4/Q1 and R1/R2) so you can see what they do.
-
-  ![Schematic](images/schematic.png)
-
-- **Wiring harness** (WireViz): every conductor by bundle, with suggested
-  wire colours, gauges and lengths, and a wire BOM —
-  [SVG](harness/gt-trackball.svg) · [HTML with BOM](harness/gt-trackball.html) ·
-  [BOM (TSV)](harness/gt-trackball.bom.tsv).
-
-  ![Wiring harness](harness/gt-trackball.png)
+**For reference:** the same circuit as an electronics schematic
+([KiCad PDF](kicad/gt-trackball.pdf), [KiCad project](kicad/)) and as a
+wire-by-wire harness list with suggested colours and lengths
+([WireViz drawing](harness/gt-trackball.svg), [wire BOM](harness/gt-trackball.bom.tsv)).
 
 ---
 
