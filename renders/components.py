@@ -260,33 +260,47 @@ def prism(points, z0, z1, m, parent=None, name="", rot_z=0.0, bevel=0.0):
     return _finish(ob, m, parent, None, bevel)
 
 def trackball(mt, g):
-    """3" illuminated trackball, modelled from photos of the real unit.
-    In its own frame: square top plate with a mounting boss at each corner
-    of an 80.5 mm square, one wing straight across (196 mm tip to tip, angled
-    tips, sensor board at one end), a lower body turned 45 deg, black ring,
-    frosted lit ball. It sits turned 45 deg in the case: holes on the case
-    axes, wing tips into the front-left / rear-right corners."""
+    """3" illuminated trackball, modelled from the seller's photos.
+    In its own frame: square top plate (corners clipped) with a mounting
+    boss at each corner of the 80.5 mm square; a boxy body below it; two
+    short encoder housings on adjacent sides (+x and -y), each with its
+    sensor board on the outer face (J1 on the +x one); copper LED-power
+    tabs on the -x side; black ring and frosted lit ball. It sits turned
+    45 deg in the case, so the mounting holes are on the case axes."""
     R = 45.0                                            # rotation into the case frame
+    c, sn = math.cos(math.radians(R)), math.sin(math.radians(R))
+    rot = lambda x, y: (x * c - y * sn, x * sn + y * c)
     top = CEIL                                          # hole surface = deck underside
     # square top plate, corners clipped, 100 x 100 x 4
     s, k = 50.0, 9.0
     plate = [(-s + k, -s), (s - k, -s), (s, -s + k), (s, s - k), (s - k, s), (-s + k, s), (-s, s - k), (-s, -s + k)]
     prism(plate, top - 4.0, top, mt["housing"], g, "Top plate", R, 0.6)
-    # mounting bosses + holes at the corners of the 80.5 square
     for hx, hy in ((40.25, 40.25), (-40.25, 40.25), (40.25, -40.25), (-40.25, -40.25)):
-        c, sn = math.cos(math.radians(R)), math.sin(math.radians(R))
-        x, y = hx * c - hy * sn, hx * sn + hy * c
+        x, y = rot(hx, hy)
         cyl(11.0, 6.0, (x, y, top - 3.0), mt["housing"], parent=g)
         cyl(5.6, 6.2, (x, y, top - 3.0), mt["chip"], parent=g)
-    # the wing: straight across, angled tips
-    L, w, tip = 98.0, 14.0, 6.0
-    wing = [(-L, -tip), (-L + 13, -w), (L - 13, -w), (L, -tip), (L, tip), (L - 13, w), (-L + 13, w), (-L, tip)]
-    prism(wing, top - 9.0, top - 1.0, mt["housing"], g, "Wing", R, 0.6)
-    # lower body: square turned 45 deg relative to the top plate (a diamond under it)
-    b = 47.0
-    body = [(0, -b * 1.25), (b * 1.25, 0), (0, b * 1.25), (-b * 1.25, 0)]
-    prism([(x * 0.86, y * 0.86) for x, y in body], PLATE_T, top - 4.0, mt["housing"], g, "Body", R, 2.0)
-    prism([(-38, -38), (38, -38), (38, 38), (-38, 38)], PLATE_T + 8, top - 4.0, mt["housing"], g, "Cage", R, 2.0)
+    # boxy body under the plate
+    zb = PLATE_T + 2.0
+    bw = 42.0
+    prism([(-bw, -bw), (bw, -bw), (bw, bw), (-bw, bw)], zb, top - 4.0, mt["housing"], g, "Body", R, 1.5)
+    # two encoder housings on adjacent sides, sensor boards on their outer faces
+    z0, z1 = top - 48.0, top - 6.0
+    for side, j1 in (("+x", True), ("-y", False)):
+        if side == "+x":
+            outline = [(bw - 1, -24), (bw + 13, -24), (bw + 13, 24), (bw - 1, 24)]
+            px, py, nx, ny = bw + 14, 0.0, 1.0, 0.0
+        else:
+            outline = [(-24, -bw - 13), (24, -bw - 13), (24, -bw + 1), (-24, -bw + 1)]
+            px, py, nx, ny = 0.0, -bw - 14, 0.0, -1.0
+        prism(outline, z0, z1, mt["housing"], g, "Encoder housing", R, 1.0)
+        x, y = rot(px, py)
+        size = (1.6, 40.0, 30.0) if side == "+x" else (40.0, 1.6, 30.0)
+        box(size, (x, y, (z0 + z1) / 2), mt["pcb_g"], 0.2, rot=(0, 0, R), parent=g,
+            name="J1 board" if j1 else "Sensor board")
+        if j1:
+            jx, jy = rot(px + nx * 3.5, py + ny * 3.5)
+            box((5.5, 17.5, 6.0), (jx, jy, (z0 + z1) / 2 + 4), mt["plastic_w"], 0.3,
+                rot=(0, 0, R), parent=g, name="J1")
     # ring + lip, frosted ball
     cyl(75.5, 4.5, (0, 0, CEIL + 2.25), mt["ring"], parent=g, name="Ring", bevel=0.6)
     cyl(80.0, 1.0, (0, 0, CEIL + 0.5), mt["ring"], parent=g)
@@ -294,21 +308,12 @@ def trackball(mt, g):
                                          location=(0, 0, BALL_Z * MM))
     ball = bpy.context.object; ball.name = "Ball"; ball.data.materials.append(mt["ball"])
     bpy.ops.object.shade_smooth(); ball.parent = g
-    # sensor board with J1 at the rear-right wing tip, blank board at the other
-    c, sn = math.cos(math.radians(R)), math.sin(math.radians(R))
-    for sgn, j1 in ((1, True), (-1, False)):
-        tx, ty = sgn * 88 * c, sgn * 88 * sn
-        pcb = box((2.0, 20.0, 14.0), (tx, ty, top - 16.0), mt["pcb_g"], 0.2, rot=(0, 0, R), parent=g,
-                  name="J1 board" if j1 else "Sensor board")
-        if j1:
-            box((6.0, 17.5, 6.0), (tx + sgn * 3.5 * c, ty + sgn * 3.5 * sn, top - 16.0), mt["plastic_w"], 0.3,
-                rot=(0, 0, R), parent=g, name="J1")
-    # copper LED-power tabs with screws on the front face of the top plate
-    fx, fy = -s * sn * 0 + 0, 0
-    for dx in (-12, 12):
-        x = dx * c - (-s - 2) * sn; y = dx * sn + (-s - 2) * c
-        box((10, 2.0, 8), (x, y, top - 6.0), mt["gold"], 0.2, rot=(0, 0, R), parent=g)
-        cyl(4.0, 1.0, (x - 1.2 * sn, y - 1.2 * c, top - 6.0), mt["steel"], rot=(90, 0, R), parent=g)
+    # copper LED-power tabs with screws on the -x face of the body
+    for dy in (-12, 12):
+        x, y = rot(-bw - 1.0, dy)
+        box((2.0, 10, 8), (x, y, top - 14.0), mt["gold"], 0.2, rot=(0, 0, R), parent=g)
+        sx, sy = rot(-bw - 2.2, dy)
+        cyl(4.0, 1.0, (sx, sy, top - 14.0), mt["steel"], rot=(0, 90, R), parent=g)
     return g
 
 def button(mt, g, x, y):
@@ -373,8 +378,8 @@ def wiring(mt, g):
         (dup(px(7), front), (BUTTONS[0][0], BUTTONS[0][1] - 3, CEIL - 45), "wire_gr"),
         (dup(px(8), front), (BUTTONS[1][0], BUTTONS[1][1] - 3, CEIL - 45), "wire_gr"),
         (dup(px(10), front), (BUTTONS[2][0], BUTTONS[2][1] - 3, CEIL - 45), "wire_gr"),
-        (dup(px(13), front), (62.2, 62.2, CEIL - 16), "wire_bl"),
-        (dup(px(14), front), (60.2, 64.2, CEIL - 16), "wire_bl"),
+        (dup(px(13), front), (44.8, 43.4, CEIL - 20), "wire_bl"),
+        (dup(px(14), front), (43.4, 44.8, CEIL - 20), "wire_bl"),
         (dup(px(3), rear), (FET[0], FET[1] - 11.5, PLATE_T + 12), "wire_br"),
         (dup(px(6), rear), (SENSOR[0], SENSOR[1] - 10.5, PLATE_T + 10), "wire_br"),
         (dup(px(18), rear), (CHG[0] + 9, CHG[1] - 7, PLATE_T + 3), "wire_r"),
@@ -383,8 +388,8 @@ def wiring(mt, g):
         mid = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, max(a[2], b[2]) + 12)
         wire([a, mid, b], mt[col], 1.3, g)
     # trackball power from the MOSFET module
-    wire([(FET[0] - 3, FET[1] - 11.5, PLATE_T + 11), (60, 85, PLATE_T + 30), (58.0, 60.0, CEIL - 22)], mt["wire_r"], 1.3, g)
-    wire([(FET[0] + 3, FET[1] - 11.5, PLATE_T + 11), (62, 88, PLATE_T + 28), (56.0, 62.0, CEIL - 22)], mt["wire_k"], 1.3, g)
+    wire([(FET[0] - 3, FET[1] - 11.5, PLATE_T + 11), (60, 80, PLATE_T + 30), (45.5, 42.0, CEIL - 25)], mt["wire_r"], 1.3, g)
+    wire([(FET[0] + 3, FET[1] - 11.5, PLATE_T + 11), (62, 82, PLATE_T + 28), (42.0, 45.5, CEIL - 25)], mt["wire_k"], 1.3, g)
     return g
 
 # ---------- build everything ----------
