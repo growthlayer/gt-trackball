@@ -8,9 +8,13 @@
 #  trackball is powered down and the Pico lightsleeps, waking on a
 #  button press. A hardware watchdog (Bluetooth mode only) reboots the
 #  firmware if it ever hangs.
-#  Mode switches and wake-up use a SOFT restart (restart() below): on
-#  battery the Pico stays powered, and after a hard machine.reset() its
-#  USB never comes back up (the host sees no device at all).
+#  Restarts (restart() below): plugging the cable in uses a SOFT
+#  restart -- on battery the Pico stays powered, and a hard
+#  machine.reset() with the cable attached left USB dead (the host saw no
+#  device). Waking from sleep and pulling the cable use a HARD reset:
+#  there is no cable then, and a soft restart leaves the Wi-Fi/Bluetooth
+#  chip running, after which Windows could never re-encrypt the link
+#  (connected, no cursor, until re-paired).
 #
 #  Maintenance: the USB cable also carries the MicroPython REPL, so
 #  config.py can be changed in the finished case with mpremote. Hold
@@ -94,9 +98,12 @@ def feed():
         wdt.feed()
 
 
-def restart():
-    """Re-run the firmware from the top (mode switch, wake-up). Soft, not
-    machine.reset(): see the header."""
+def restart(hard=False):
+    """Re-run the firmware from the top. hard=True (no cable attached):
+    full reset, which also power-cycles the radio chip. Otherwise soft:
+    see the header."""
+    if hard:
+        machine.reset()
     if wdt:
         try:
             open(_WDT_FLAG, "w").close()
@@ -142,7 +149,7 @@ def go_to_sleep(stop_radio):
         feed()
         if buttons() or (config.USB_MODE_ENABLED and usb_present()):
             break
-    restart()                                 # clean radio/USB state
+    restart(hard=True)                        # wake: fresh radio, no cable attached
 
 
 # ---------- shared tasks ----------
@@ -197,7 +204,7 @@ def run_usb():
         while True:
             await asyncio.sleep(5)
             if not usb_present():
-                restart()                     # cable pulled -> Bluetooth
+                restart(hard=True)            # cable pulled -> Bluetooth, fresh radio
             b = battery_state()
             if abs(b - disp.batt) >= 10:      # charging reading wobbles: no redraw spam
                 disp.set(batt=b)
