@@ -17,13 +17,16 @@ Each folder has:
 
 | File | Contents | X1C / P1S | A1 |
 |---|---|---|---|
-| **`gt-trackball-all.3mf`** | everything, 2 plates: top shell + clips, then the bottom plate | 8 h 26 min, 446 g | 8 h 49 min, 446 g |
+| **`gt-trackball-all.3mf`** | everything, 2 plates: top shell + clips, then the bottom plate | 8 h 27 min, ≈ 447 g | 8 h 50 min, ≈ 447 g |
 | `top.3mf` | top shell only | 5 h 46 min, 322 g | 6 h 00 min, 322 g |
-| `bottom.3mf` | bottom plate only | 2 h 37 min, 123 g | 2 h 46 min, 123 g |
+| `bottom.3mf` | bottom plate only | 2 h 38 min, ≈ 124 g | 2 h 47 min, ≈ 124 g |
 | `clips.3mf` | the 2 display clips | 3 min | 3 min |
+| `mounts_test.3mf` | optional: the three board cradles on their own, to check your charger / MOSFET / sensor boards snap in before printing the full bottom plate | 25 min | 27 min |
 
-All twelve slice with no warnings (0.4 mm nozzle, Bambu PLA Basic,
-0.20 mm layers + the settings below). Another Bambu printer with a 256 mm
+All fifteen are sliced with a 0.4 mm nozzle, Bambu PLA Basic, 0.20 mm layers
+and the settings below. Bambu Studio shows a "floating regions" notice on the
+top shell: it's a false alarm — the shell prints fine without supports, which
+is how it was built. Another Bambu printer with a 256 mm
 bed: open any of them and switch the printer at the top-left of Bambu
 Studio — the process settings carry over.
 
@@ -57,8 +60,9 @@ To rebuild the projects after changing the design:
 | Part | Orientation | Notes |
 |---|---|---|
 | `top.stl` | **as exported** — deck face down on the bed | The Ø76.1 ball bore, the four Ø5.1 locating pins and the corner pillars all point up. The 45° palm bevel is self-supporting. The e-ink window is a through-cut, nothing to bridge. |
-| `bottom.stl` | as exported, flat side down | Battery tray walls, Pico standoffs and board posts point up. The Ø13 × 1.2 feet recesses are on the bed side and print as-is. |
+| `bottom.stl` | as exported, flat side down | Battery tray walls, Pico standoffs and the snap-in board cradles point up. The Ø13 × 1.2 feet recesses are on the bed side and print as-is. |
 | `clips.stl` | as exported | Two small bars; print together. |
+| `mounts_test.stl` | as exported, flat side down | Optional fit test for the board cradles. |
 
 ## After printing
 

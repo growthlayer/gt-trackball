@@ -6,6 +6,7 @@
 #  For each printer it writes print/bambu-<printer>/:
 #    gt-trackball-all.3mf   every part, arranged on 2 plates
 #    top.3mf / bottom.3mf / clips.3mf   one part each
+#    mounts_test.3mf   the board cradles on their own (fit test)
 #  all with the case's print settings applied on top of Bambu's
 #  "0.20mm Standard" process and "Bambu PLA Basic" filament.
 # ============================================================
@@ -33,7 +34,8 @@ CASE_SETTINGS = {
     "brim_type": "outer_only",
     "brim_width": "5",
 }
-SETS = {"gt-trackball-all": ["top", "bottom", "clips"], "top": ["top"], "bottom": ["bottom"], "clips": ["clips"]}
+SETS = {"gt-trackball-all": ["top", "bottom", "clips"], "top": ["top"], "bottom": ["bottom"], "clips": ["clips"],
+        "mounts_test": ["mounts_test"]}
 META = {"Title": "GT Trackball - wireless 3in arcade trackball case",
         "License": "CC BY-SA 4.0",
         "Description": "Remix of 3-Inch Arcade Trackball Case by vkschannel (thing:7334881). "
@@ -95,7 +97,7 @@ for key, (machine, process, filament) in PRINTERS.items():
                "--load-filaments", os.path.join(prof, "filament.json"),
                "--export-3mf", out] + [os.path.join(STL, p + ".stl") for p in parts]
         subprocess.run(cmd, cwd=work)
-        for _ in range(120):                    # the GUI build returns before it finishes
+        for _ in range(480):                    # the GUI build returns before it finishes
             if os.path.exists(out):
                 break
             time.sleep(0.5)

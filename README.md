@@ -278,12 +278,16 @@ Component layout in the bottom of the case:
      internal anchors
    - Pico (8) **upside down** on its four standoffs, USB jack between the
      two flattened ones
-   - charger (9) between its pegs, USB-C end toward the battery
-   - MOSFET module (11) in the right-rear pegs, voltage sensor (10) beside
-     the charger (hot glue)
+   - charger (9), MOSFET module (11) and voltage sensor (10) each **snap
+     into their own cradle**: slide one edge under the two fixed lips, then
+     press the other edge down until the hook clicks over it. No glue or
+     screws — to remove one, push the hook outward and lift. Charger: USB-C
+     end toward the battery. MOSFET: screw terminals front and back.
+     Sensor: header pins toward the front (against the low stop).
+   - Not sure your boards match? Print `mounts_test` first (about 25 min,
+     the three cradles on their own) and try each board in it.
 5. **Trackball (5):** turned 45° so its four mounting holes sit on the
-   case's front/back/left/right axes and the long arms point into the
-   corners; lower the top shell over it so the four pins drop into its
+   case's front/back/left/right axes; lower the top shell over it so the four pins drop into its
    holes.
 6. Plug the micro-USB cable from the Pico into the feedthrough, check
    nothing is pinched, and close the case with the four M3 × 8 screws.
@@ -320,9 +324,10 @@ trackball drive RetroBat's menus: **[pc/README.md](pc/README.md)**.
   swing meter (`SWING_*`), screen orientation (`EPD_FLIP`), device name.
   Details in [firmware/README.md](firmware/README.md).
 - **Case** — `trackball_bt_case.scad` (OpenSCAD) is fully parametric: ball
-  bore, mounting pins, button positions, display window, board pegs,
-  feedthrough, case size. Set `part` to `top`, `bottom`, `clips`,
-  `exploded` or `layout` and export. The `chk_*` parts are collision
+  bore, mounting pins, button positions, display window, the board
+  cradles (each board's size and thickness is a parameter: `tp_*`,
+  `boost_*`, `sens_*`), feedthrough, case size. Set `part` to `top`,
+  `bottom`, `mounts_test`, `clips`, `exploded` or `layout` and export. The `chk_*` parts are collision
   checks that should render empty.
 
 ---

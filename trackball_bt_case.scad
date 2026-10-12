@@ -24,7 +24,7 @@
 //   part="assembly" -> on-screen preview only
 // ============================================================
 
-part = "assembly";   // ["top","bottom","clips","template","assembly","exploded","layout","shell"]
+part = "assembly";   // ["top","bottom","mounts_test","clips","template","assembly","exploded","layout","shell"]
 
 // ---------- MEASURE-ME parameters -----------------------------------
 // Verify these against YOUR trackball unit with calipers before the
@@ -108,9 +108,21 @@ usb_ft_hole_dx  = 19;       // horizontal hole spacing
 usb_ft_hole_dz  = 24;       // vertical hole spacing
 usb_ft_pilot_d  = 2.6;      // M3 self-tapping pilot
 
-// MT3608 boost module (not used: the charger board boosts). Its pegs now
-// hold the MOSFET trigger module.
-boost_w = 17;  boost_l = 30;  boost_center = [80.5, 107]; // floor, right-rear
+// XY-MOS dual-MOSFET trigger module, 34 x 17 (the size every listing
+// gives), screw terminals on both short ends. Right-rear floor.
+boost_w = 17;  boost_l = 34;  boost_center = [80.5, 107];
+fet_pcb_t = 1.6;
+// 0-25 V voltage sensor module: 13.5 wide; its length varies between
+// makers (25-30), so its cradle has no end stops. Left floor, in front
+// of the charger.
+sens_w = 13.5;  sens_l = 27;  sens_center = [-84, 75];
+sens_pcb_t = 1.6;
+tp_pcb_t = 1.2;
+// snap-in cradles (no glue, no screws): the board rests on edge rails
+// cradle_lift above the plate (clear of solder tails), fixed lips hold one
+// side, a flexing hook clicks over the other.
+cradle_lift = 2.5;
+cradle_clr  = 0.3;    // per side, around the board
 
 // (no power switch: the controller sleeps in firmware and wakes on a
 //  button press or ball movement; the battery is always connected)
@@ -307,6 +319,51 @@ module board_posts(c, w, l, inset=3, skip_xneg=false, skip_xpos=false, cl=0.3){
     translate([c[0]+sx*(w/2+cl+r), c[1]+fy*(l/2-inset), 0]) cylinder(r=r,h=h);
 }
 
+// Snap-in cradle for a small module. Board centred on c, width w along
+// local X (the sides with the lips/hooks), length l along local Y, then
+// turned by rot. Edge rails hold it cradle_lift above the plate; posts
+// with fixed lips on -X; flexing hooks (rooted in a relief pocket so the
+// arm is long enough to bend) on +X. stop_y = +1 / -1 adds a low end stop.
+module cradle(c, w, l, pcb_t, rot=0, lips=[-6, 6], hooks=[0], stop_y=0){
+  xe  = w/2 + cradle_clr;                 // inside face of the posts
+  zb  = plate_t + cradle_lift;            // board underside
+  zt  = zb + pcb_t;                       // board top
+  pw  = 6;                                // post width along Y
+  translate([c[0], c[1], 0]) rotate([0,0,rot]) {
+    // edge rails under the board (1.2 mm of the edge)
+    for(sx=[-1,1])
+      translate([sx>0 ? w/2-1.2 : -w/2-cradle_clr, -l/2+1, plate_t-eps])
+        cube([1.2+cradle_clr-0.15, l-2, cradle_lift+eps]);
+    // fixed side: posts + lips
+    for(y=lips)
+      translate([-xe-1.6, y-pw/2, 0]) {
+        cube([1.6, pw, zt+0.25+1.0]);
+        translate([1.6-eps, 0, zt+0.25]) cube([0.8+eps, pw, 1.0]);
+      }
+    // flexing side: thin arm + lip with a lead-in slope
+    for(y=hooks)
+      translate([xe, y-pw/2, 1.0]) {
+        cube([1.2, pw, zt+0.15+1.2-1.0]);
+        translate([0, 0, zt+0.15-1.0])
+          rotate([90,0,0]) translate([0,0,-pw])
+            linear_extrude(pw) polygon([[eps,0],[-0.7,0],[eps,1.2]]);
+      }
+    // optional low end stop
+    if(stop_y!=0)
+      translate([-w/4, stop_y*(l/2+cradle_clr), plate_t-eps])
+        translate([0, stop_y>0 ? 0 : -1.6, 0]) cube([w/2, 1.6, cradle_lift+1.0]);
+  }
+}
+// relief pockets that free the flexing hooks from the plate
+module cradle_relief(c, w, l, rot=0, hooks=[0]){
+  xe = w/2 + cradle_clr;
+  translate([c[0], c[1], 0]) rotate([0,0,rot])
+    for(y=hooks) difference(){                  // a moat round the arm, not through it
+      translate([xe-0.15, y-3-0.6, 1.0]) cube([1.2+0.15+0.6, 6+1.2, plate_t]);
+      translate([xe, y-3, 0]) cube([1.2, 6, plate_t+1]);
+    }
+}
+
 // Internal zip-tie anchors at both ends of the battery tray: a bridge the
 // tie loops under, all on the inside. Tie path: over the pack, down the
 // gap between tray wall and anchor, under the bridge, up and back over.
@@ -353,12 +410,18 @@ module bottom_plate(){
               cube([6,10,pico_usb_flat_h+1]);
           }
       tie_anchors();
-      // charger: USB-C end faces +X (toward the battery) and is left open
-      // so a USB-C plug fits; 0.6 clearance -- 0.3 was too tight in print
-      board_posts(tp_center, tp_w, tp_l, inset=4, skip_xpos=true, cl=0.6);
-      // inset 2 keeps the short-end posts clear of the centered micro-USB
-      board_posts(boost_center, boost_w, boost_l, inset=2);
+      // snap-in cradles. Charger: lips on its -X end, one hook on the +X
+      // (USB-C) end beside the port; its long edges carry the solder pads,
+      // so nothing clamps there.
+      cradle(tp_center, tp_w, tp_l, tp_pcb_t, lips=[-5, 5], hooks=[-5]);
+      // MOSFET: lips/hooks on the long sides, terminal ends open
+      cradle(boost_center, boost_w, boost_l, fet_pcb_t, lips=[-7, 7], hooks=[-7, 7]);
+      // voltage sensor: long sides, stop behind the header-pin end only
+      cradle(sens_center, sens_w, sens_l, sens_pcb_t, lips=[-4, 3], hooks=[-4, 3], stop_y=-1);
     }
+    cradle_relief(tp_center, tp_w, tp_l, hooks=[-5]);
+    cradle_relief(boost_center, boost_w, boost_l, hooks=[-7, 7]);
+    cradle_relief(sens_center, sens_w, sens_l, hooks=[-4, 3]);
     // countersunk M3 screws at the corners (heads on the underside)
     for(p=pillar_pos()){
       translate([p[0],p[1],-eps]) cylinder(d=lid_screw_d,h=plate_t+2*eps);
@@ -519,8 +582,9 @@ module usb_ft_inside(){   // coupler body inside the wall + the A plug and overm
   translate([usb_ft_center_x-6, inner_ry-21-19, usb_ft_center_z-4]) cube([12,19,8]);
 }
 module mock_parts(){   // real component envelopes as installed
-  translate([tp_center[0]-tp_w/2, tp_center[1]-tp_l/2, plate_t+0.05]) cube([tp_w,tp_l,1.6]);
-  translate([boost_center[0]-boost_w/2, boost_center[1]-boost_l/2, plate_t+0.05]) cube([boost_w,boost_l,1.6]);
+  translate([tp_center[0]-tp_w/2, tp_center[1]-tp_l/2, plate_t+cradle_lift+0.05]) cube([tp_w,tp_l,tp_pcb_t-0.1]);
+  translate([boost_center[0]-boost_w/2, boost_center[1]-boost_l/2, plate_t+cradle_lift+0.05]) cube([boost_w,boost_l,fet_pcb_t-0.1]);
+  translate([sens_center[0]-sens_w/2, sens_center[1]-sens_l/2, plate_t+cradle_lift+0.05]) cube([sens_w,sens_l,sens_pcb_t-0.1]);
   translate([bat_center[0]-bat_w/2, bat_center[1]-bat_l/2, plate_t+0.05]) cube([bat_w,bat_l,bat_h]);
   translate([pico_center[0]-pico_pcb_w/2, pico_center[1]-pico_pcb_l/2, plate_t+pico_standoff_h+0.05])
     cube([pico_pcb_w,pico_pcb_l,12]);
@@ -533,6 +597,15 @@ module mock_parts(){   // real component envelopes as installed
 // ============================================================
 if(part=="top")          translate([0,0,H]) rotate([180,0,0]) top_shell();  // print upside down
 else if(part=="bottom")  bottom_plate();
+else if(part=="mounts_test")                    // 3 cradles on a small strip: try the boards first
+  intersection(){
+    bottom_plate();
+    union(){
+      translate([tp_center[0]-20, tp_center[1]-17, -1]) cube([40, 34, 40]);
+      translate([boost_center[0]-17, boost_center[1]-24, -1]) cube([34, 48, 40]);
+      translate([sens_center[0]-15, sens_center[1]-21, -1]) cube([30, 42, 40]);
+    }
+  }
 else if(part=="clips")   for(i=[0,1]) translate([0,i*14,0]) eink_clip();
 else if(part=="template")fit_template();
 else if(part=="layout")  layout();

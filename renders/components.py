@@ -25,6 +25,7 @@ CHG = (-79.5, 107.0)
 FET = (80.5, 107.0)
 SENSOR = (-84.0, 75.0)
 BAT = (0.0, 95.0)
+CRADLE = 2.5                            # boards snap into cradles this far above the plate
 USB = (26.7, 36.0)                      # x, z on the rear wall
 PILLARS = [(-92.5, -70.5), (92.5, -70.5), (-92.5, 138.5), (92.5, 138.5)]
 FEET = [(-77.5, -55.5), (77.5, -55.5), (-77.5, 123.5), (77.5, 123.5)]
@@ -199,7 +200,7 @@ def epaper(mt, g, clips=True):
 
 def charger(mt, g):
     """TP4056-type charger + adjustable boost, 24 x 19, USB-C toward the battery (+x)."""
-    x0, y0 = CHG; z = PLATE_T
+    x0, y0 = CHG; z = PLATE_T + CRADLE
     box((24, 19, 1.2), (x0, y0, z + 0.6), mt["pcb_k"], 0.2, parent=g, name="Charger PCB")
     box((7.3, 8.9, 3.2), (x0 + 9.5, y0 + 3.0, z + 1.2 + 1.6), mt["silver"], 0.4, parent=g, name="USB-C")
     box((6.0, 6.0, 4.5), (x0 - 6.0, y0 + 3.0, z + 1.2 + 2.25), mt["chip"], 0.8, parent=g, name="Inductor")
@@ -213,21 +214,21 @@ def charger(mt, g):
     return g
 
 def mosfet(mt, g):
-    """XY-MOS dual D4184 trigger module in the right-rear pegs."""
-    x0, y0 = FET; z = PLATE_T
-    box((17, 30, 1.6), (x0, y0, z + 0.8), mt["pcb_b"], 0.2, parent=g, name="MOSFET PCB")
+    """XY-MOS dual D4184 trigger module (34 x 17) in its right-rear cradle."""
+    x0, y0 = FET; z = PLATE_T + CRADLE
+    box((17, 34, 1.6), (x0, y0, z + 0.8), mt["pcb_b"], 0.2, parent=g, name="MOSFET PCB")
     for dy in (-3.5, 3.5):
         box((6.6, 6.1, 2.3), (x0 + 2.5, y0 + dy, z + 1.6 + 1.15), mt["chip"], 0.2, parent=g, name="D4184")
         box((5.2, 1.2, 0.3), (x0 - 1.6, y0 + dy, z + 1.75), mt["silver"], parent=g)
     for sy in (-1, 1):
-        box((10.0, 7.5, 9.0), (x0, y0 + sy * 11.5, z + 1.6 + 4.5), mt["term_b"], 0.4, parent=g, name="Terminal")
+        box((10.0, 7.5, 9.0), (x0, y0 + sy * 13.25, z + 1.6 + 4.5), mt["term_b"], 0.4, parent=g, name="Terminal")
         for dx in (-2.5, 2.5):
-            cyl(3.0, 0.6, (x0 + dx, y0 + sy * 11.5, z + 1.6 + 9.3), mt["steel"], parent=g)
+            cyl(3.0, 0.6, (x0 + dx, y0 + sy * 13.25, z + 1.6 + 9.3), mt["steel"], parent=g)
     return g
 
 def sensor(mt, g):
     """0-25 V voltage sensor (30 k / 7.5 k divider)."""
-    x0, y0 = SENSOR; z = PLATE_T
+    x0, y0 = SENSOR; z = PLATE_T + CRADLE
     box((13.5, 27, 1.6), (x0, y0, z + 0.8), mt["pcb_r"], 0.2, parent=g, name="Sensor PCB")
     box((10.0, 7.5, 9.0), (x0, y0 + 8.5, z + 1.6 + 4.5), mt["term_g"], 0.4, parent=g, name="Terminal")
     for dx in (-2.5, 2.5):
